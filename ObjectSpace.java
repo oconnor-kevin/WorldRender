@@ -23,6 +23,17 @@ public class ObjectSpace {
         return idspace;
     }
     
+    public String print2D(int i){
+        String s = "";
+        for (int j = getIDSpace()[i].length - 1; j>=0; j--){
+            for (int k = 0; k<getIDSpace()[0][0].length; k++){
+                s += getIDSpace()[i][j][k] + " ";
+            }
+            s += " \n";
+        }
+        return s;
+    }
+    
 // Mutator Methods
     public void addParticle(int i, int j, int k, int id){
         idspace[i][j][k] = id;
@@ -41,6 +52,7 @@ public class ObjectSpace {
             }
         }
     }
+    
 
 
 
