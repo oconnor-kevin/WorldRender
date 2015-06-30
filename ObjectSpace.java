@@ -1,21 +1,30 @@
 import linearalgebra.*;
+import java.util.ArrayList;
 
 public class ObjectSpace {
 
 // Fields    
     private int[][][] idspace;
+    private ArrayList<Particle> pastActiveParticles;
+    private ArrayList<Particle> activeParticles;
 
 // Constructors
     public ObjectSpace(int[][][] a){
         idspace = a;
+        activeParticles = new ArrayList<>();
+        pastActiveParticles = new ArrayList<>();
     }
     
     public ObjectSpace(int i, int j, int k){
         idspace = new int[i][j][k];
+        activeParticles = new ArrayList<>();
+        pastActiveParticles = new ArrayList<>();
     }
     
     public ObjectSpace(){
         idspace = new int[0][0][0];
+        activeParticles = new ArrayList<>();
+        pastActiveParticles = new ArrayList<>();
     }
     
 // Accessor Methods
@@ -34,13 +43,28 @@ public class ObjectSpace {
         return s;
     }
     
-// Mutator Methods
-    public void addParticle(int i, int j, int k, int id){
-        idspace[i][j][k] = id;
+    public ArrayList<Particle> getActiveParticles(){
+        return activeParticles;
     }
     
-    public void removeParticle(int i, int j, int k){
-        idspace[i][j][k] = 0;
+    public ArrayList<Particle> getPastActiveParticles(){
+        return pastActiveParticles;
+    }
+    
+// Mutator Methods
+    public void addParticle(Particle p){
+        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = p.getID();
+        activeParticles.add(p);
+    }
+    
+    public void showParticle(Particle p){
+        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = p.getID();
+    }
+    
+    public void removeParticle(Particle p){
+        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = 0;
+        pastActiveParticles.add(p);
+        activeParticles.remove(p);
     }
     
     public void clearObjectSpace(){
@@ -51,10 +75,22 @@ public class ObjectSpace {
                 }
             }
         }
+        activeParticles.clear();
+    }
+
+// for now this method assumes no collisions and one time unit increment
+    public void incrementTime(){
+        pastActiveParticles.clear();
+        for (int i = 0; i<activeParticles.size(); i++){
+            removeParticle(activeParticles.get(i));
+            activeParticles.get(i).timeStep(1.0);
+        }
     }
     
-
-
-
+    public void updateObjectSpace(){
+        for (int i = 0; i<activeParticles.size(); i++){
+            showParticle(activeParticles.get(i));
+        }
+    }
 
 }

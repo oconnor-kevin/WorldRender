@@ -18,7 +18,7 @@ public class Particle {
 
 // Constructors
     public Particle(){
-        id = 0;
+        id = generateRandomID(1000000);
         position = new Vector(new double[]{0.0,0.0,0.0});
         velocity = new Vector(new double[]{0.0,0.0,0.0});
     }
