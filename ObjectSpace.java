@@ -67,11 +67,36 @@ public class ObjectSpace {
         activeMatter = newActiveMatter;
     }
     
+// starting with least efficient algorithm, will adjust later
+/* TODO: make collisionCheck algorithm efficient */
     public boolean collisionCheck(double timeUnits){
-        ArrayList<Vector> displacementVectors = new ArrayList<Vector>();
+        boolean collided = false;
+        incrementTime(timeUnits);
+        ArrayList<Vector> initialPositions = new ArrayList<Vector>();
+        ArrayList<Vector> finalPositions = new ArrayList<Vector>();
         for (int i = 0; i<activeMatter.size(); i++){
-            displacementVectors.add()
+            for (int j = 0; j<activeMatter.get(i).getParticles().size(); j++){
+                initialPositions.add(pastActiveMatter.get(i).getParticles().get(j).getPosition());
+                finalPositions.add(activeMatter.get(i).getParticles().get(j).getPosition());
+            }
         }
+        for (int i = 0; i<initialPositions.size(); i++){
+            for (int j = 0; j<initialPositions.size(); j++){
+                if (!collided){    
+                    if (i != j) {
+                        if (Math.max(finalPositions.get(i).getComponents()[0], initialPositions.get(i).getComponents()[0]) >= Math.min(finalPositions.get(j).getComponents()[0], initialPositions.get(j).getComponents()[0]) &&
+                               Math.max(finalPositions.get(j).getComponents()[0], initialPositions.get(j).getComponents()[0]) >= Math.min(finalPositions.get(i).getComponents()[0], initialPositions.get(i).getComponents()[0]) &&
+                               Math.max(finalPositions.get(i).getComponents()[1], initialPositions.get(i).getComponents()[1]) >= Math.min(finalPositions.get(j).getComponents()[1], initialPositions.get(j).getComponents()[1]) &&
+                               Math.max(finalPositions.get(j).getComponents()[1], initialPositions.get(j).getComponents()[1]) >= Math.min(finalPositions.get(i).getComponents()[1], initialPositions.get(i).getComponents()[1]) &&
+                               Math.max(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2]) >= Math.min(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) &&
+                               Math.max(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) >= Math.min(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2])){
+                            collided = true;
+                        }
+                    }
+                }
+            }
+        }
+        return collided;
     }
     
 //------------------------------------------------------------------------------
@@ -84,4 +109,22 @@ public class ObjectSpace {
         return s;
     }
 
+    public static ArrayList<Vector> combineArrayLists(ArrayList<Vector> a, ArrayList<Vector> b){
+        ArrayList<Vector> c = new ArrayList<Vector>();
+        for (int i = 0; i<a.size(); i++){
+            c.add(a.get(i));
+        }
+        for (int i = 0; i<b.size(); i++){
+            c.add(b.get(i));
+        }
+        return c;
+    }
+    
+    public static ArrayList<Vector> combineListOfArrayLists(ArrayList<ArrayList<Vector>> a){
+        ArrayList<Vector> b = new ArrayList<Vector>();
+        for (int i = 0; i<a.size(); i++){
+            b = combineArrayLists(b, a.get(i));
+        }
+        return b;
+    }
 }
