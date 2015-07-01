@@ -80,6 +80,7 @@ public class ObjectSpace {
                 finalPositions.add(activeMatter.get(i).getParticles().get(j).getPosition());
             }
         }
+        int[] collisionIndices = new int[2];
         for (int i = 0; i<initialPositions.size(); i++){
             for (int j = 0; j<initialPositions.size(); j++){
                 if (!collided){    
@@ -91,11 +92,15 @@ public class ObjectSpace {
                                Math.max(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2]) >= Math.min(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) &&
                                Math.max(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) >= Math.min(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2])){
                             collided = true;
+                            collisionIndices[0] = i;
+                            collisionIndices[1] = j;
                         }
                     }
                 }
             }
         }
+        nextCollision = Vector.multiplyVectorByScalar(Vector.addVectors(Vector.multiplyVectorByScalar(Vector.addVectors(finalPositions.get(collisionIndices[0]), initialPositions.get(collisionIndices[0])), 0.5),
+                Vector.multiplyVectorByScalar(Vector.addVectors(finalPositions.get(collisionIndices[1]), initialPositions.get(collisionIndices[1])), 0.5)), 0.5);
         return collided;
     }
     
