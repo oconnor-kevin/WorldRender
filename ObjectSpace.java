@@ -3,93 +3,74 @@ import java.util.ArrayList;
 
 public class ObjectSpace {
 
+//------------------------------------------------------------------------------    
 // Fields    
-    private int[][][] idspace;
-    private ArrayList<Particle> pastActiveParticles;
-    private ArrayList<Particle> activeParticles;
+    private ArrayList<Matter> pastActiveMatter;
+    private ArrayList<Matter> activeMatter;
+    private Vector nextCollision;
 
+//------------------------------------------------------------------------------    
 // Constructors
-    public ObjectSpace(int[][][] a){
-        idspace = a;
-        activeParticles = new ArrayList<>();
-        pastActiveParticles = new ArrayList<>();
-    }
-    
-    public ObjectSpace(int i, int j, int k){
-        idspace = new int[i][j][k];
-        activeParticles = new ArrayList<>();
-        pastActiveParticles = new ArrayList<>();
-    }
-    
     public ObjectSpace(){
-        idspace = new int[0][0][0];
-        activeParticles = new ArrayList<>();
-        pastActiveParticles = new ArrayList<>();
+        activeMatter = new ArrayList<>();
+        pastActiveMatter = new ArrayList<>();
+        nextCollision = new Vector();
     }
     
+    public ObjectSpace(ArrayList<Matter> a, ArrayList<Matter> b){
+        activeMatter = a;
+        pastActiveMatter = b;
+        nextCollision = new Vector();
+    }
+    
+    public ObjectSpace(ArrayList<Matter> a){
+        activeMatter = a;
+        pastActiveMatter = new ArrayList<>();
+        nextCollision = new Vector();
+    }
+    
+// -----------------------------------------------------------------------------    
 // Accessor Methods
-    public int[][][] getIDSpace(){
-        return idspace;
+    public ArrayList<Matter> getActiveMatter(){
+        return activeMatter;
     }
     
-    public String print2D(int i){
-        String s = "";
-        for (int j = getIDSpace()[i].length - 1; j>=0; j--){
-            for (int k = 0; k<getIDSpace()[0][0].length; k++){
-                s += getIDSpace()[i][j][k] + " ";
-            }
-            s += " \n";
-        }
-        return s;
+    public ArrayList<Matter> getPastActiveMatter(){
+        return pastActiveMatter;
     }
     
-    public ArrayList<Particle> getActiveParticles(){
-        return activeParticles;
-    }
-    
-    public ArrayList<Particle> getPastActiveParticles(){
-        return pastActiveParticles;
-    }
-    
+//-----------------------------------------------------------------------------    
 // Mutator Methods
-    public void addParticle(Particle p){
-        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = p.getID();
-        activeParticles.add(p);
+    public void addMatter(Matter m){
+        pastActiveMatter.add(new Matter());
+        activeMatter.add(m);
     }
     
-    public void showParticle(Particle p){
-        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = p.getID();
-    }
-    
-    public void removeParticle(Particle p){
-        idspace[(int) p.getPosition().getComponents()[0]][(int) p.getPosition().getComponents()[1]][(int) p.getPosition().getComponents()[2]] = 0;
-        pastActiveParticles.add(p);
-        activeParticles.remove(p);
+    public void removeMatter(Matter m){
+        pastActiveMatter.add(m);
+        activeMatter.set(activeMatter.indexOf(m), new Matter());
     }
     
     public void clearObjectSpace(){
-        for (int i = 0; i<getIDSpace().length; i++){
-            for (int j = 0; j<getIDSpace()[0].length; j++){
-                for (int k = 0; k<getIDSpace()[0][0].length; k++){
-                    getIDSpace()[i][j][k] = 0;
-                }
-            }
+        for (int i = 0; i<activeMatter.size(); i++){
+            removeMatter(activeMatter.get(i));
         }
-        activeParticles.clear();
     }
 
 // for now this method assumes no collisions and one time unit increment
-    public void incrementTime(){
-        pastActiveParticles.clear();
-        for (int i = 0; i<activeParticles.size(); i++){
-            removeParticle(activeParticles.get(i));
-            activeParticles.get(i).timeStep(1.0);
+    public void incrementTime(double timeUnits){
+        pastActiveMatter = activeMatter;
+        ArrayList<Matter> activeMatterCopy = new ArrayList<Matter>();
+        for (int i = 0; i<activeMatter.size(); i++){
+            
+            activeMatter.set(i, activeMatterCopy.get(i).incrementTime(timeUnits));
         }
     }
     
-    public void updateObjectSpace(){
-        for (int i = 0; i<activeParticles.size(); i++){
-            showParticle(activeParticles.get(i));
+    public boolean collisionCheck(double timeUnits){
+        ArrayList<Vector> displacementVectors = new ArrayList<Vector>();
+        for (int i = 0; i<activeMatter.size(); i++){
+            displacementVectors.add()
         }
     }
 

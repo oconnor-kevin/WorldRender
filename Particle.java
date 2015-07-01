@@ -62,14 +62,19 @@ public class Particle {
     }
     
 // the following is a simplified timeStep method which assumes acceleration << velocity/time    
-    public void timeStep(double timeUnits){
-        position = Vector.addVectors(position, (Vector.multiplyVectorByScalar(velocity, timeUnits)));
+    public static Particle timeStep(Particle p, double timeUnits){
+        Vector newPosition = Vector.addVectors(p.getPosition(), (Vector.multiplyVectorByScalar(p.getVelocity(), timeUnits)));
+        return new Particle(p.getID(), newPosition, p.getVelocity());
     }
     
     
 // Methods    
     public static int generateRandomID(int max){
         return (int) Math.floor(Math.random()*max);
+    }
+    
+    public static String printParticle(Particle p){
+        return (String) (p.getID() + ", (" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ")");
     }
     
 
