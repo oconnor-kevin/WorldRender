@@ -40,13 +40,14 @@ public class Vector {
 		double[] c = new double[a.getComponents().length];
 		for (int i=0; i<a.getComponents().length; i++){
 			c[i] = a.getComponents()[i] + b.getComponents()[i];}
-	Vector d = new Vector(c);
-	return d;}
+                Vector d = new Vector(c);
+                return d;}
 	
 	public static Vector multiplyVectorByScalar(Vector v, double s){
+                Vector v2 = new Vector(v.getComponents().length);
 		for (int i=0; i<v.getComponents().length; i++){
-			v.setComponentAtIndexTo(i, s*v.getComponents()[i]);}
-		return v;}
+			v2.setComponentAtIndexTo(i, s*v.getComponents()[i]);}
+		return v2;}
 	
 	public static double dotProduct(Vector a, Vector b){
 		double c = 0;

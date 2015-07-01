@@ -63,6 +63,7 @@ public class Particle {
     
 // the following is a simplified timeStep method which assumes acceleration << velocity/time    
     public static Particle timeStep(Particle p, double timeUnits){
+        Vector oldVelocity = new Vector(p.getVelocity().getComponents());
         Vector newPosition = Vector.addVectors(p.getPosition(), (Vector.multiplyVectorByScalar(p.getVelocity(), timeUnits)));
         return new Particle(p.getID(), newPosition, p.getVelocity());
     }
