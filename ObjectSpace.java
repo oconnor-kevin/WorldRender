@@ -60,11 +60,11 @@ public class ObjectSpace {
 // for now this method assumes no collisions and one time unit increment
     public void incrementTime(double timeUnits){
         pastActiveMatter = activeMatter;
-        ArrayList<Matter> activeMatterCopy = new ArrayList<Matter>();
+        ArrayList<Matter> newActiveMatter = new ArrayList<Matter>();
         for (int i = 0; i<activeMatter.size(); i++){
-            
-            activeMatter.set(i, activeMatterCopy.get(i).incrementTime(timeUnits));
+            newActiveMatter.add(Matter.incrementTime(activeMatter.get(i), timeUnits));
         }
+        activeMatter = newActiveMatter;
     }
     
     public boolean collisionCheck(double timeUnits){

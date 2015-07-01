@@ -30,5 +30,9 @@ public class WorldRenderTest {
         ObjectSpace f = new ObjectSpace(e);
         
         System.out.println(ObjectSpace.printObjectSpace(f));
+        
+        f.incrementTime(1.0);
+        
+        System.out.println(ObjectSpace.printObjectSpace(f));
     }
 }
