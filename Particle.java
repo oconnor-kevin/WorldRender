@@ -74,7 +74,7 @@ public class Particle {
     }
     
     public static String printParticle(Particle p){
-        return (String) (p.getID() + ", (" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ")");
+        return (String) (p.getID() + ", (" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ") \n");
     }
     
 

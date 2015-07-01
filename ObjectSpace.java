@@ -73,5 +73,15 @@ public class ObjectSpace {
             displacementVectors.add()
         }
     }
+    
+//------------------------------------------------------------------------------
+// Methods
+    public static String printObjectSpace(ObjectSpace o){
+        String s = "";
+        for (int i = 0; i<o.getActiveMatter().size(); i++){
+            s += Matter.printParticles(o.getActiveMatter().get(i));
+        }
+        return s;
+    }
 
 }

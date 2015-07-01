@@ -62,7 +62,7 @@ public class Matter {
 
 //------------------------------------------------------------------------------
 // Methods
-    public ArrayList<Vector> particleDisplacement(Matter a, Matter b){
+    public static ArrayList<Vector> particleDisplacement(Matter a, Matter b){
         ArrayList<Vector> particleDisplacements = new ArrayList<Vector>();
         if (a.getParticles().size() == b.getParticles().size()){
             for (int i = 0; i<a.getParticles().size(); i++){
@@ -81,7 +81,12 @@ public class Matter {
     }
     
     public static String printParticles(Matter m){
-        
+        String s = "";
+        for (int i = 0; i<m.getParticles().size(); i++){
+            s += Particle.printParticle(m.getParticles().get(i));
+        }
+        s += " \n";
+        return s;
     }
 
 }
