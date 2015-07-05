@@ -18,6 +18,10 @@ public class WorldRenderTest {
         Particle b = new Particle(1, new Vector(3), new Vector(new double[]{0.0, 2.0, 0.0}));
         Particle c = new Particle(5, new Vector(new double[]{0.0, 4.0, 0.0}), new Vector(3));
         
+        MassEquivalent mass = new MassEquivalent("grams");
+        
+        b.addMassEquivalentOfValue(mass, 1.0);
+        
         ArrayList<Particle> a = new ArrayList<Particle>();
         a.add(b);
         a.add(c);
@@ -34,5 +38,7 @@ public class WorldRenderTest {
         f.incrementTime(10.0);
         
         System.out.println(ObjectSpace.printObjectSpace(f));
+        
+        System.out.println(b.getMassEquivalents().get(mass));
     }
 }
