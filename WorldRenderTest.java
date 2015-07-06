@@ -47,8 +47,12 @@ public class WorldRenderTest {
         Polynomial testPoly = new Polynomial(hmap);
         testPoly.setCoefficientOfOrderTo(4, 10.0);
         
-        System.out.println(Polynomial.valueAt(1.0, testPoly));
+        Polynomial testQuadraticPoly = new Polynomial();
+        testQuadraticPoly.setCoefficientOfOrderTo(0, -5.0);
+        testQuadraticPoly.setCoefficientOfOrderTo(1, -50.0);
+        testQuadraticPoly.setCoefficientOfOrderTo(2, 1.0);
         
-        System.out.println(Polynomial.printPolynomial(testPoly));
+        System.out.println(Polynomial.printPolynomial(testQuadraticPoly));
+        System.out.println(Polynomial.rootWithinBounds(-100.0, 100.0, testQuadraticPoly, 0.001));
     }
 }

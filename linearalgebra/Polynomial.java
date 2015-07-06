@@ -94,6 +94,60 @@ public class Polynomial
         return rts;
     }
     
+/* This method returns a root of a polynomial within a given boundary and tolerance
+    TAKES: double corresponding to minimum of the x boundary, double corresponding 
+        to the maximum of the x boundary, a Polynomial object, and a double 
+        corresponding to the threshold of the computation at which value the 
+        method assumes a root has been found.
+    RETURNS: double corresponding to the root if one is found, or -1000000.0 if a 
+        root is not found.
+*/    
+    public static double rootWithinBounds(double xmin, double xmax, Polynomial p, double d){
+        if((p.getCoefficients().get(0) == 0.0) && (xmin < 0.0) && (xmax > 0.0)){
+            return 0.0;
+        }
+        else if((valueAt(xmin, p) < 0.0) && (valueAt(xmax, p) > 0.0)){
+            if(valueAt((xmin + xmax)/2.0, p) < -d){
+                return rootWithinBounds((xmin + xmax)/2.0, xmax, p, d);
+            }
+            else if(valueAt((xmin + xmax)/2.0, p) > d){
+                return rootWithinBounds(xmin, (xmin + xmax)/2.0, p, d);
+            }
+            else {
+                return (xmin + xmax)/2.0;
+            }
+        }
+        else if((valueAt(xmin, p) > 0.0) && (valueAt(xmax, p) < 0.0)){
+            if(valueAt((xmin + xmax)/2.0, p) > d){
+                return rootWithinBounds((xmin + xmax)/2.0, xmax, p, d);
+            }
+            else if(valueAt((xmin + xmax)/2.0, p) < -d){
+                return rootWithinBounds(xmin, (xmin + xmax)/2.0, p, d);
+            }
+            else {
+                return (xmin + xmax)/2.0;
+            }
+        }
+        else{
+            return -1000000.0;
+        } 
+    }
+  
+    public static Polynomial derivative(Polynomial p){
+        Polynomial dp = new Polynomial();
+        for (int i = 1; i<p.getCoefficients().size(); i++){
+            dp.setCoefficientOfOrderTo(i-1, p.getCoefficients().get(i)*i);
+        }
+        return dp;
+    }
+    
+    public static Polynomial derivativeOfOrder(int n, Polynomial p){
+        for (int i = 0; i<n; i++){
+            p = derivative(p);
+        }
+        return p;
+    }
+    
 /*  TODO    
     public static double[] rootsWithinTolerance(Polynomial p, double t){
         
