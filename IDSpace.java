@@ -79,6 +79,7 @@ public class IDSpace {
     }
 
 // for now this method assumes no collisions and one time unit increment
+/* 
     public void incrementTime(){
         pastActiveParticles.clear();
         for (int i = 0; i<activeParticles.size(); i++){
@@ -86,6 +87,7 @@ public class IDSpace {
             activeParticles.get(i).timeStep(1.0);
         }
     }
+*/    
     
     public void updateObjectSpace(){
         for (int i = 0; i<activeParticles.size(); i++){

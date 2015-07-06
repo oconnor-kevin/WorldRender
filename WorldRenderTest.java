@@ -10,6 +10,7 @@
  */
 import linearalgebra.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class WorldRenderTest {
     
@@ -39,6 +40,15 @@ public class WorldRenderTest {
         
         System.out.println(ObjectSpace.printObjectSpace(f));
         
-        System.out.println(b.getMassEquivalents().get(mass));
+        ArrayList<Double> testArrayList = new ArrayList<>();
+        HashMap<Integer, Double> hmap = new HashMap();
+        hmap.put(2, 5.3);
+        hmap.put(4, 4.0);
+        Polynomial testPoly = new Polynomial(hmap);
+        testPoly.setCoefficientOfOrderTo(4, 10.0);
+        
+        System.out.println(Polynomial.valueAt(1.0, testPoly));
+        
+        System.out.println(Polynomial.printPolynomial(testPoly));
     }
 }
