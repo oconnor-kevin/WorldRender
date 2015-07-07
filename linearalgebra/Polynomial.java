@@ -15,20 +15,20 @@ import java.util.HashMap;
 public class Polynomial 
 {
 // Fields    
-    private ArrayList<Double> coefficients;
+    private ArrayList<ComplexNumber> coefficients;
     
 //------------------------------------------------------------------------------
 // Constructors
     public Polynomial(){
-        coefficients = new ArrayList<Double>();
+        coefficients = new ArrayList<ComplexNumber>();
     }
     
-    public Polynomial(ArrayList<Double> c){
+    public Polynomial(ArrayList<ComplexNumber> c){
         coefficients = c;
     }
     
-    public Polynomial(HashMap<Integer, Double> h){
-        coefficients = new ArrayList<Double>();
+    public Polynomial(HashMap<Integer, ComplexNumber> h){
+        coefficients = new ArrayList<ComplexNumber>();
         Object[] keyArray = h.keySet().toArray();
         for (int i = 0; i<h.keySet().size(); i++){
         setCoefficientOfOrderTo((int) keyArray[i], h.get(((int) keyArray[i])));
@@ -37,20 +37,20 @@ public class Polynomial
     
 //------------------------------------------------------------------------------
 // Accessor Methods
-    public ArrayList<Double> getCoefficients(){
+    public ArrayList<ComplexNumber> getCoefficients(){
         return coefficients;
     }
     
 //------------------------------------------------------------------------------
 // Mutator Methods
-    public void setCoefficients(ArrayList<Double> c){
+    public void setCoefficients(ArrayList<ComplexNumber> c){
         coefficients = c;
     }
     
-    public void setCoefficientOfOrderTo(int i, double newCoef){
+    public void setCoefficientOfOrderTo(int i, ComplexNumber newCoef){
         if (coefficients.size() <= i){
             for (int j = coefficients.size(); j <= i; j++){
-                coefficients.add(0.0);
+                coefficients.add(new ComplexNumber());
             } 
         }
         coefficients.set(i, newCoef);
@@ -74,10 +74,10 @@ public class Polynomial
         return s;
     }
     
-    public static double valueAt(double x, Polynomial p){
-        double val = 0.0;
+    public static ComplexNumber valueAt(ComplexNumber x, Polynomial p){
+        ComplexNumber val = new ComplexNumber();
         for (int i = 0; i<p.getCoefficients().size(); i++){
-            val += p.getCoefficients().get(i)*Math.pow(x, (double) i);
+            val = ComplexNumber.add(val, ComplexNumber.multiply(p.getCoefficients().get(i),ComplexNumber.toPower(x,i)));
         }
         return val;
     }

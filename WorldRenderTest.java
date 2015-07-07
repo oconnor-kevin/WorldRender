@@ -17,6 +17,7 @@ public class WorldRenderTest {
     public static void main(String[] args){
         
 // Testing the collisionCheck method
+/*        
         Particle part1 = new Particle(1, new Vector(new double[]{0.0,0.0,0.0}), new Vector(new double[]{0.0,0.0,1.0}));
         Particle part2 = new Particle(2, new Vector(new double[]{0.0,5.0,5.0}), new Vector(new double[]{0.0,0.0,0.0}));
         
@@ -38,5 +39,8 @@ public class WorldRenderTest {
             os.incrementTime(1.0);        
             System.out.println(ObjectSpace.printObjectSpace(os));      
         }
+*/
+        
+        
     }
 }

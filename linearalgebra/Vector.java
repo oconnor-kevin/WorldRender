@@ -1,10 +1,11 @@
 package linearalgebra;
 
-public class Vector {
+public class Vector{
 	
 // Fields
 	private double[] components;
 	
+//------------------------------------------------------------------------------        
 // Constructors
 	public Vector(){
 		components = new double[1];}
@@ -15,12 +16,10 @@ public class Vector {
 	public Vector(double[] a){
 		components = a;}
 	
+//------------------------------------------------------------------------------        
 // Accessor Methods
 	public double[] getComponents(){
 		return components;}
-	
-	public void setComponentAtIndexTo(int i, double d){
-		components[i] = d;}
 	
 	public double getMagnitude(){
 		double a = 0;
@@ -34,7 +33,46 @@ public class Vector {
 			a[0] = getMagnitude();
 			a[1] = Math.atan(components[1]/components[0]);				
 			a[2] = Math.atan(Math.pow(components[0]*components[0] + components[1]*components[1], 0.5)/components[2]);}
-		return a;}		
+		return a;}	
+
+//------------------------------------------------------------------------------
+// Mutator Methods
+	public void setComponentAtIndexTo(int i, double d){
+		components[i] = d;}
+ 
+/*        
+//------------------------------------------------------------------------------
+// Interface Implementation
+        public int compareTo(Comparable vec){
+            Vector v = (Vector) vec;
+            Boolean equal = true;
+            if (v.getComponents().length != getComponents().length){
+                equal = false;
+            }
+            else{
+                for (int i = 0; i<getComponents().length; i++){
+                    if (v.getComponents()[i] != getComponents()[i]){
+                        equal = false;
+                        break;
+                    }
+                }
+            }
+            if (equal == true){
+                return 0;
+            }
+            else if (v.getMagnitude() < getMagnitude()){
+                return 1;
+            }
+            else if (v.getMagnitude() > getMagnitude()){
+                return -1;
+            }
+            else {
+                return -1;
+            }
+        }
+*/        
+        
+//------------------------------------------------------------------------------        
 // Methods
 	public static Vector addVectors(Vector a, Vector b){
 		double[] c = new double[a.getComponents().length];
@@ -42,6 +80,10 @@ public class Vector {
 			c[i] = a.getComponents()[i] + b.getComponents()[i];}
                 Vector d = new Vector(c);
                 return d;}
+        
+        public static Vector subtractVectors(Vector a, Vector b){
+            return addVectors(a, multiplyVectorByScalar(b, -1.0));
+        }
 	
 	public static Vector multiplyVectorByScalar(Vector v, double s){
                 Vector v2 = new Vector(v.getComponents().length);
