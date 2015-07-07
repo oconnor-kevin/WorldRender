@@ -87,7 +87,7 @@ public class ObjectSpace {
         }
         int[] collisionIndices = new int[2];
         for (int i = 0; i<initialPositions.size(); i++){
-            for (int j = 0; j<initialPositions.size(); j++){
+            for (int j = i; j<initialPositions.size(); j++){
                 if (!collided){    
                     if (i != j) {
                         if (Math.max(finalPositions.get(i).getComponents()[0], initialPositions.get(i).getComponents()[0]) >= Math.min(finalPositions.get(j).getComponents()[0], initialPositions.get(j).getComponents()[0]) &&
