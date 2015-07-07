@@ -16,43 +16,27 @@ public class WorldRenderTest {
     
     public static void main(String[] args){
         
-        Particle b = new Particle(1, new Vector(3), new Vector(new double[]{0.0, 2.0, 0.0}));
-        Particle c = new Particle(5, new Vector(new double[]{0.0, 4.0, 0.0}), new Vector(3));
+// Testing the collisionCheck method
+        Particle part1 = new Particle(1, new Vector(new double[]{0.0,0.0,0.0}), new Vector(new double[]{0.0,0.999999,1.0}));
+        Particle part2 = new Particle(2, new Vector(new double[]{0.0,5.0,5.0}), new Vector(new double[]{0.0,0.0,0.0}));
         
-        MassEquivalent mass = new MassEquivalent("grams");
+        ArrayList<Particle> particles1 = new ArrayList<>();
+        ArrayList<Particle> particles2 = new ArrayList<>();
         
-        b.addMassEquivalentOfValue(mass, 1.0);
+        particles1.add(part1);
+        particles2.add(part2);
         
-        ArrayList<Particle> a = new ArrayList<Particle>();
-        a.add(b);
-        a.add(c);
+        Matter matt1 = new Matter(particles1);
+        Matter matt2 = new Matter(particles2);
         
-        Matter d = new Matter(a);
-        ArrayList<Matter> e = new ArrayList<Matter>();
-        e.add(d);
-            
+        ObjectSpace os = new ObjectSpace();
+        os.addMatter(matt1);
+        os.addMatter(matt2);
         
-        ObjectSpace f = new ObjectSpace(e);
-        
-        System.out.println(ObjectSpace.printObjectSpace(f));
-        
-        f.incrementTime(10.0);
-        
-        System.out.println(ObjectSpace.printObjectSpace(f));
-        
-        ArrayList<Double> testArrayList = new ArrayList<>();
-        HashMap<Integer, Double> hmap = new HashMap();
-        hmap.put(2, 5.3);
-        hmap.put(4, 4.0);
-        Polynomial testPoly = new Polynomial(hmap);
-        testPoly.setCoefficientOfOrderTo(4, 10.0);
-        
-        Polynomial testQuadraticPoly = new Polynomial();
-        testQuadraticPoly.setCoefficientOfOrderTo(0, -5.0);
-        testQuadraticPoly.setCoefficientOfOrderTo(1, -50.0);
-        testQuadraticPoly.setCoefficientOfOrderTo(2, 1.0);
-        
-        System.out.println(Polynomial.printPolynomial(testQuadraticPoly));
-        System.out.println(Polynomial.rootWithinBounds(-100.0, 100.0, testQuadraticPoly, 0.001));
+        for (int i = 0; i<10; i++){
+            System.out.println("Collision will occur? " + os.collisionCheck(1.0)); 
+            os.incrementTime(1.0);        
+            System.out.println(ObjectSpace.printObjectSpace(os));      
+        }
     }
 }

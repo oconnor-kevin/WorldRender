@@ -68,16 +68,21 @@ public class ObjectSpace {
     }
     
 // starting with least efficient algorithm, will adjust later
-/* TODO: make collisionCheck algorithm efficient */
+/* TODO: make collisionCheck algorithm efficient 
+   -Also, the algorithm seems to be altering the position of the particle but
+    otherwise seems to be functioning properly.
+    */
+    
     public boolean collisionCheck(double timeUnits){
         boolean collided = false;
-        incrementTime(timeUnits);
-        ArrayList<Vector> initialPositions = new ArrayList<Vector>();
-        ArrayList<Vector> finalPositions = new ArrayList<Vector>();
-        for (int i = 0; i<activeMatter.size(); i++){
-            for (int j = 0; j<activeMatter.get(i).getParticles().size(); j++){
-                initialPositions.add(pastActiveMatter.get(i).getParticles().get(j).getPosition());
-                finalPositions.add(activeMatter.get(i).getParticles().get(j).getPosition());
+        ObjectSpace testOS = new ObjectSpace(this.getActiveMatter(), this.getPastActiveMatter());
+        testOS.incrementTime(timeUnits);
+        ArrayList<Vector> initialPositions = new ArrayList<>();
+        ArrayList<Vector> finalPositions = new ArrayList<>();
+        for (int i = 0; i<testOS.getActiveMatter().size(); i++){
+            for (int j = 0; j<testOS.getActiveMatter().get(i).getParticles().size(); j++){
+                initialPositions.add(testOS.getPastActiveMatter().get(i).getParticles().get(j).getPosition());
+                finalPositions.add(testOS.getActiveMatter().get(i).getParticles().get(j).getPosition());
             }
         }
         int[] collisionIndices = new int[2];
