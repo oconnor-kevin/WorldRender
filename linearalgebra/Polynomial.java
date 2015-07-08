@@ -1,7 +1,6 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is a component of the linearalgebra package written by
+ * Kevin O'Connor. 
  */
 package linearalgebra;
 
@@ -15,20 +14,20 @@ import java.util.HashMap;
 public class Polynomial 
 {
 // Fields    
-    private ArrayList<ComplexNumber> coefficients;
+    private ArrayList<Double> coefficients;
     
 //------------------------------------------------------------------------------
 // Constructors
     public Polynomial(){
-        coefficients = new ArrayList<ComplexNumber>();
+        coefficients = new ArrayList<>();
     }
     
-    public Polynomial(ArrayList<ComplexNumber> c){
+    public Polynomial(ArrayList<Double> c){
         coefficients = c;
     }
     
-    public Polynomial(HashMap<Integer, ComplexNumber> h){
-        coefficients = new ArrayList<ComplexNumber>();
+    public Polynomial(HashMap<Integer, Double> h){
+        coefficients = new ArrayList<Double>();
         Object[] keyArray = h.keySet().toArray();
         for (int i = 0; i<h.keySet().size(); i++){
         setCoefficientOfOrderTo((int) keyArray[i], h.get(((int) keyArray[i])));
@@ -37,20 +36,29 @@ public class Polynomial
     
 //------------------------------------------------------------------------------
 // Accessor Methods
-    public ArrayList<ComplexNumber> getCoefficients(){
+    public ArrayList<Double> getCoefficients(){
         return coefficients;
+    }
+    
+    public boolean isQuadratic(){
+        if (coefficients.size() == 3.0){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
 //------------------------------------------------------------------------------
 // Mutator Methods
-    public void setCoefficients(ArrayList<ComplexNumber> c){
+    public void setCoefficients(ArrayList<Double> c){
         coefficients = c;
     }
     
-    public void setCoefficientOfOrderTo(int i, ComplexNumber newCoef){
+    public void setCoefficientOfOrderTo(int i, Double newCoef){
         if (coefficients.size() <= i){
             for (int j = coefficients.size(); j <= i; j++){
-                coefficients.add(new ComplexNumber());
+                coefficients.add(0.0);
             } 
         }
         coefficients.set(i, newCoef);
@@ -77,7 +85,7 @@ public class Polynomial
     public static ComplexNumber valueAt(ComplexNumber x, Polynomial p){
         ComplexNumber val = new ComplexNumber();
         for (int i = 0; i<p.getCoefficients().size(); i++){
-            val = ComplexNumber.add(val, ComplexNumber.multiply(p.getCoefficients().get(i),ComplexNumber.toPower(x,i)));
+            val = ComplexNumber.add(val, ComplexNumber.multiplyByScalar(ComplexNumber.toPower(x,i), p.getCoefficients().get(i)));
         }
         return val;
     }
@@ -153,5 +161,42 @@ public class Polynomial
         
     }
 */    
+    
+    public static boolean isQuadratic(Polynomial p){
+        if ((p.getCoefficients().size() == 3.0) && (p.getCoefficients().get(2) != 0.0)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+    public static ComplexNumber[] quadraticRoots(Polynomial p){
+        ComplexNumber[] roots = new ComplexNumber[2];
+        roots[0] = new ComplexNumber(-10000000.0, -10000000.0);
+        roots[1] = new ComplexNumber(-10000000.0, -10000000.0);
+        if (p.isQuadratic()){
+            ComplexNumber plusRoot = new ComplexNumber();
+            ComplexNumber minusRoot = new ComplexNumber();
+            if (Math.pow(p.getCoefficients().get(1), 2.0) < (4.0*p.getCoefficients().get(0)*p.getCoefficients().get(2))){
+                plusRoot.setReal(-0.5*p.getCoefficients().get(1)/p.getCoefficients().get(2));
+                minusRoot.setReal(-0.5*p.getCoefficients().get(1)/p.getCoefficients().get(2));
+                plusRoot.setImag(Math.sqrt(Math.abs(Math.pow(p.getCoefficients().get(1), 2.0) - 4.0*p.getCoefficients().get(0)*p.getCoefficients().get(2)))/(2.0*p.getCoefficients().get(2)));
+                minusRoot.setImag(-1.0*Math.sqrt(Math.abs(Math.pow(p.getCoefficients().get(1), 2.0) - 4.0*p.getCoefficients().get(0)*p.getCoefficients().get(2)))/(2.0*p.getCoefficients().get(2)));
+            }
+            else{
+                plusRoot.setReal(-0.5*p.getCoefficients().get(1)/p.getCoefficients().get(2) + Math.sqrt(Math.abs(Math.pow(p.getCoefficients().get(1), 2.0) - 4.0*p.getCoefficients().get(0)*p.getCoefficients().get(2)))/(2.0*p.getCoefficients().get(2)));
+                minusRoot.setReal(-0.5*p.getCoefficients().get(1)/p.getCoefficients().get(2) - Math.sqrt(Math.abs(Math.pow(p.getCoefficients().get(1), 2.0) - 4.0*p.getCoefficients().get(0)*p.getCoefficients().get(2)))/(2.0*p.getCoefficients().get(2)));
+            }
+            roots[0] = plusRoot;
+            roots[1] = minusRoot;
+        }
+        return roots;
+    }
+    
+    
+    
+    
+    
     
 }

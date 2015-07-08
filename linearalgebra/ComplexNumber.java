@@ -1,7 +1,10 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * This class is a component of the linearalgebra package written by
+ * Kevin O'Connor.  
+ *
+ * ComplexNumber allows for the creation and manipulation of ComplexNumbers
+ *  which, at their heart consist of a two dimensional vector with alternate
+ *  multiplication and division operations defined for them.  
  */
 package linearalgebra;
 

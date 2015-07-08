@@ -42,11 +42,35 @@ public class WorldRenderTest {
 */
         
 // Testing the ComplexNumber class
+/*        
         ComplexNumber a = new ComplexNumber(5.0, 6.0);
         ComplexNumber b = new ComplexNumber(10.0, 3.0);
         
         System.out.println(ComplexNumber.printComplexNumber(ComplexNumber.toPower(a,2)));
+*/
         
+// Testing the Quadratic functionalities of the Polynomial class
+        ArrayList<Double> coefs1 = new ArrayList<>();
+        coefs1.add(1.0);
+        coefs1.add(0.0);
+        coefs1.add(1.0);
+        
+        ArrayList<Double> coefs2 = new ArrayList<>();
+        coefs2.add(2.0);
+        coefs2.add(1.0);
+        
+        Polynomial a = new Polynomial(coefs1);
+        Polynomial b = new Polynomial(coefs2);
+        
+        System.out.println(a.isQuadratic());
+        System.out.println(Polynomial.isQuadratic(a));
+        System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(a)[0]));
+        System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(a)[1]));
+        
+        System.out.println(b.isQuadratic());
+        System.out.println(Polynomial.isQuadratic(b));
+        System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(b)[0]));
+        System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(b)[1]));
 
         
         
