@@ -9,7 +9,7 @@ package linearalgebra;
  *
  * @author kevinoconnor
  */
-public class ComplexNumber extends Vector
+public class ComplexNumber 
 {
 // Fields
     private Vector parts;
@@ -81,11 +81,11 @@ public class ComplexNumber extends Vector
 //------------------------------------------------------------------------------
 // Method
     public static ComplexNumber add(ComplexNumber a, ComplexNumber b){
-        return (new ComplexNumber(addVectors(a.getParts(), b.getParts())));
+        return (new ComplexNumber(Vector.addVectors(a.getParts(), b.getParts())));
     }
     
     public static ComplexNumber subtract(ComplexNumber a, ComplexNumber b){
-        return new ComplexNumber(subtractVectors(a, b));
+        return new ComplexNumber(Vector.subtractVectors(a.getParts(), b.getParts()));
     }
     
     public static ComplexNumber multiply(ComplexNumber a, ComplexNumber b){
@@ -93,13 +93,18 @@ public class ComplexNumber extends Vector
     }
     
     public static ComplexNumber divide(ComplexNumber a, ComplexNumber b){
-        ComplexNumber c;
-        c = multiply(a, multiplyByScalar(b.getConjugate(), 1.0/b.getMagnitude()));
-        return c;
+        if (b.getParts().getMagnitude() != 0.0){
+            ComplexNumber c;
+            c = multiply(a, multiplyByScalar(b.getConjugate(), 1.0/b.getParts().getMagnitude()));
+            return c;
+        }
+        else {
+            return new ComplexNumber(-10000000.0, -10000000.0);
+        }
     }
 
     public static ComplexNumber multiplyByScalar(ComplexNumber a, double d){
-        return new ComplexNumber(multiplyVectorByScalar(a.getParts(), d));
+        return new ComplexNumber(Vector.multiplyVectorByScalar(a.getParts(), d));
     }
     
     public static String printComplexNumber(ComplexNumber c){
@@ -108,7 +113,7 @@ public class ComplexNumber extends Vector
     
     public static ComplexNumber toPower(ComplexNumber c, int i){
         ComplexNumber val = new ComplexNumber(c.getParts());
-        for (int j = 1; i<j; j++){
+        for (int j = 1; j<i; j++){
             val = multiply(val, c);
         }
         return val;

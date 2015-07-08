@@ -69,8 +69,6 @@ public class ObjectSpace {
     
 // starting with least efficient algorithm, will adjust later
 /* TODO: make collisionCheck algorithm efficient 
-   -Also, the algorithm seems to be altering the position of the particle but
-    otherwise seems to be functioning properly.
     */
     
     public boolean collisionCheck(double timeUnits){

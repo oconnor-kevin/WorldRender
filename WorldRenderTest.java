@@ -41,6 +41,14 @@ public class WorldRenderTest {
         }
 */
         
+// Testing the ComplexNumber class
+        ComplexNumber a = new ComplexNumber(5.0, 6.0);
+        ComplexNumber b = new ComplexNumber(10.0, 3.0);
+        
+        System.out.println(ComplexNumber.printComplexNumber(ComplexNumber.toPower(a,2)));
+        
+
+        
         
     }
 }
