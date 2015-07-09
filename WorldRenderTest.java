@@ -48,7 +48,8 @@ public class WorldRenderTest {
         
         System.out.println(ComplexNumber.printComplexNumber(ComplexNumber.toPower(a,2)));
 */
-        
+ 
+/*        
 // Testing the Quadratic functionalities of the Polynomial class
         ArrayList<Double> coefs1 = new ArrayList<>();
         coefs1.add(1.0);
@@ -71,8 +72,38 @@ public class WorldRenderTest {
         System.out.println(Polynomial.isQuadratic(b));
         System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(b)[0]));
         System.out.println(ComplexNumber.printComplexNumber(Polynomial.quadraticRoots(b)[1]));
-
+*/
         
+// Testing Polynomial arithmetic
+        ArrayList<Double> coefs1 = new ArrayList<>();
+        coefs1.add(1.0);
+        coefs1.add(1.0);
+        
+        ArrayList<Double> coefs2 = new ArrayList<>();
+        coefs2.add(1.0);
+        coefs2.add(1.0);
+        coefs2.add(1.0);
+        
+        Polynomial a = new Polynomial(coefs1);
+        Polynomial b = new Polynomial(coefs2);
+        
+        System.out.println(Polynomial.printPolynomial(Polynomial.multiply(a, b)));
+        System.out.println(Polynomial.printPolynomial(Polynomial.add(a,b)));
+        System.out.println(Polynomial.printPolynomial(Polynomial.subtract(a,b)));
+        
+        ArrayList<Double> coefs3 = new ArrayList<>();
+        coefs3.add(1.0);
+        coefs3.add(1.0);
+        coefs3.add(0.0);
+        coefs3.add(0.0);
+        
+        Polynomial c = new Polynomial(coefs3);
+        
+        System.out.println(Polynomial.printPolynomial(c));
+        c.clean();
+        System.out.println(Polynomial.printPolynomial(c));
+        
+        System.out.println(Polynomial.printPolynomial(Polynomial.multiplyByScalar(b, 5.5)));
         
     }
 }

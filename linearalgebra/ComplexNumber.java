@@ -66,6 +66,10 @@ public class ComplexNumber
         return (new ComplexNumber(getReal(), getImag()*(-1.0)));
     }
     
+    public double getMag(){
+        return getParts().getMagnitude();
+    }
+    
 //------------------------------------------------------------------------------    
 // Mutator Methods
     public void setReal(double re){
@@ -76,10 +80,40 @@ public class ComplexNumber
         parts.setComponentAtIndexTo(1, im);
     }
     
+    public void setParts(Vector p){
+        parts = p;
+    }
+    
     public void scaleMag(double fac){
         setReal(getReal()*fac);
         setImag(getImag()*fac);
     }
+    
+    public void add(ComplexNumber a){
+        setReal(getReal() + a.getReal());
+        setImag(getImag() + a.getImag());
+    }
+    
+    public void subtract(ComplexNumber a){
+        setReal(getReal() - a.getReal());
+        setImag(getImag() - a.getImag());
+    }
+    
+    public void multiply(ComplexNumber a){
+        setReal(getReal()*a.getReal() - getImag()*a.getImag());
+        setImag(getReal()*a.getImag() + getImag()*a.getReal());
+    }
+    
+    public void multiplyByScalar(double d){
+        setParts(Vector.multiplyVectorByScalar(getParts(), d));
+    }
+    
+    public void divide(ComplexNumber a){
+        if(a.getMag() != 0.0){
+            multiply(conjugate(a));
+            multiplyByScalar(1.0/a.getMag());
+        }
+    }        
     
 //------------------------------------------------------------------------------
 // Method
@@ -120,6 +154,13 @@ public class ComplexNumber
             val = multiply(val, c);
         }
         return val;
+    }
+    
+    public static ComplexNumber conjugate(ComplexNumber c){
+        ComplexNumber conj = new ComplexNumber();
+        conj.setReal(c.getReal());
+        conj.setImag(-1.0*c.getImag());
+        return conj;
     }
     
 }
