@@ -76,34 +76,26 @@ public class WorldRenderTest {
         
 // Testing Polynomial arithmetic
         ArrayList<Double> coefs1 = new ArrayList<>();
-        coefs1.add(1.0);
+        coefs1.add(-1.0);
         coefs1.add(1.0);
         
         ArrayList<Double> coefs2 = new ArrayList<>();
-        coefs2.add(1.0);
-        coefs2.add(1.0);
+        coefs2.add(-1.0);
+        coefs2.add(0.0);
         coefs2.add(1.0);
         
         Polynomial a = new Polynomial(coefs1);
         Polynomial b = new Polynomial(coefs2);
         
-        System.out.println(Polynomial.printPolynomial(Polynomial.multiply(a, b)));
-        System.out.println(Polynomial.printPolynomial(Polynomial.add(a,b)));
-        System.out.println(Polynomial.printPolynomial(Polynomial.subtract(a,b)));
-        
         ArrayList<Double> coefs3 = new ArrayList<>();
         coefs3.add(1.0);
+        coefs3.add(-1.0);
+        coefs3.add(-1.0);
         coefs3.add(1.0);
-        coefs3.add(0.0);
-        coefs3.add(0.0);
         
         Polynomial c = new Polynomial(coefs3);
         
-        System.out.println(Polynomial.printPolynomial(c));
-        c.clean();
-        System.out.println(Polynomial.printPolynomial(c));
-        
-        System.out.println(Polynomial.printPolynomial(Polynomial.multiplyByScalar(b, 5.5)));
-        
+
+        System.out.println(Polynomial.printPolynomial(Polynomial.divide(c, a)));
     }
 }

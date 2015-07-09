@@ -46,6 +46,10 @@ public class Polynomial
         return coefficients;
     }
     
+    public double getCoef(int i){
+        return getCoefficients().get(i);
+    }
+
     public boolean isConstant(){
         return getOrder() == 0;
     }
@@ -77,12 +81,8 @@ public class Polynomial
     public int getOrder(){
         return (getCoefficients().size() - 1);
     }
-    
-    public double getCoef(int i){
-        return getCoefficients().get(i);
-    }
-    
-    public boolean hasTrailingZeroes(){
+
+    private boolean hasTrailingZeroes(){
         return (getCoef(getOrder()) == 0.0);
     }
     
@@ -134,16 +134,15 @@ public class Polynomial
         }
         return val;
     }
-    
+
+/*    
     public static double[] roots(Polynomial p){
         double[] rts = new double[p.getCoefficients().size()];
         int rootsRemaining = p.getCoefficients().size();
         if(p.getCoefficients().get(0) == 0.0){
             rts[0] = 0.0;
             rootsRemaining--;
-        }
-/* TODO: implement default root-finding algorithm        
-*/        
+        }    
         return rts;
     }
     
@@ -155,6 +154,7 @@ public class Polynomial
     RETURNS: double corresponding to the root if one is found, or -1000000.0 if a 
         root is not found.
 */    
+/*
     public static double rootWithinBounds(double xmin, double xmax, Polynomial p, double d){
         if((p.getCoefficients().get(0) == 0.0) && (xmin < 0.0) && (xmax > 0.0)){
             return 0.0;
@@ -185,7 +185,9 @@ public class Polynomial
             return -1000000.0;
         } 
     }
-  
+*/  
+
+
     public static Polynomial derivative(Polynomial p){
         Polynomial dp = new Polynomial();
         for (int i = 1; i<p.getCoefficients().size(); i++){
@@ -275,6 +277,17 @@ public class Polynomial
         return newPoly;
     }
 
-
+    public static Polynomial divide(Polynomial a, Polynomial b){
+        Polynomial quotient = new Polynomial();
+        if (b.isLinear() && a.isLinear()){
+            quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
+            return quotient;
+        }
+        else if (b.isLinear() && a.getOrder() > b.getOrder()){
+            quotient.setCoefficientOfOrderTo(a.getOrder() - 1, a.getCoef(a.getOrder())/b.getCoef(1));
+            quotient = add(quotient, divide(subtract(a, multiply(quotient, b)), b));
+        }
+        return quotient;
+    }
 
 }
