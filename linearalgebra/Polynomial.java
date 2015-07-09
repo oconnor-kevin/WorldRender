@@ -281,7 +281,6 @@ public class Polynomial
         Polynomial quotient = new Polynomial();
         if (b.isLinear() && a.isLinear()){
             quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
-            return quotient;
         }
         else if (b.isLinear() && a.getOrder() > b.getOrder()){
             quotient.setCoefficientOfOrderTo(a.getOrder() - 1, a.getCoef(a.getOrder())/b.getCoef(1));
