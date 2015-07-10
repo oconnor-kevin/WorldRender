@@ -297,6 +297,26 @@ public class Polynomial
         return quotient;
     }
 
-    
+    public static boolean isDivisibleBy(Polynomial a, Polynomial b){
+        boolean divisible = true;
+        Polynomial quotient = new Polynomial();
+        if (b.getOrder() == a.getOrder()){
+            quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
+            double k = a.getCoef(a.getOrder())/b.getCoef(b.getOrder());
+            for (int i = a.getOrder()-1; i>=0; i--){
+                if (a.getCoef(i)/b.getCoef(i) != k){
+                    divisible = false;
+                }
+            }
+        }
+        else if (a.getOrder() > b.getOrder()){
+            quotient.setCoefficientOfOrderTo(a.getOrder() - b.getOrder(), a.getCoef(a.getOrder())/b.getCoef(b.getOrder()));
+            divisible = divisible && isDivisibleBy(subtract(a, multiply(quotient, b)), b);
+        }
+        else {
+            divisible = false;
+        }
+        return divisible;
+    }
     
 }

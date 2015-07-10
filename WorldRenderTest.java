@@ -76,7 +76,7 @@ public class WorldRenderTest {
         
 // Testing Polynomial arithmetic
         ArrayList<Double> coefs1 = new ArrayList<>();
-        coefs1.add(1.0);
+        coefs1.add(-5.0);
         coefs1.add(1.0);
         
         ArrayList<Double> coefs2 = new ArrayList<>();
@@ -120,6 +120,6 @@ public class WorldRenderTest {
         Polynomial e = new Polynomial(coefs5);
         
         
-        System.out.println(Polynomial.printPolynomial(Polynomial.divide(e, d)));
+        System.out.println(Polynomial.isDivisibleBy(e, b));
     }
 }
