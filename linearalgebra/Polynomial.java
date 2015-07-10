@@ -78,6 +78,14 @@ public class Polynomial
         return val;
     }
     
+    public ComplexNumber valueAt(double x){
+        double val = 0.0;
+        for (int i = 0; i<getOrder()+1; i++){
+            val += getCoef(i)*Math.pow(x, i);
+        }
+        return new ComplexNumber(val);
+    }
+    
     public int getOrder(){
         return (getCoefficients().size() - 1);
     }
@@ -279,14 +287,16 @@ public class Polynomial
 
     public static Polynomial divide(Polynomial a, Polynomial b){
         Polynomial quotient = new Polynomial();
-        if (b.isLinear() && a.isLinear()){
+        if (b.getOrder() == a.getOrder()){
             quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
         }
-        else if (b.isLinear() && a.getOrder() > b.getOrder()){
-            quotient.setCoefficientOfOrderTo(a.getOrder() - 1, a.getCoef(a.getOrder())/b.getCoef(1));
+        else if (a.getOrder() > b.getOrder()){
+            quotient.setCoefficientOfOrderTo(a.getOrder() - b.getOrder(), a.getCoef(a.getOrder())/b.getCoef(b.getOrder()));
             quotient = add(quotient, divide(subtract(a, multiply(quotient, b)), b));
         }
         return quotient;
     }
 
+    
+    
 }
