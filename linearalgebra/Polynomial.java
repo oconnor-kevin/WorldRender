@@ -5,6 +5,7 @@
 package linearalgebra;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -25,6 +26,13 @@ public class Polynomial
     
     public Polynomial(ArrayList<Double> c){
         coefficients = c;
+    }
+    
+    public Polynomial(double[] d){
+        coefficients = new ArrayList<Double>();
+        for (int i = 0; i<d.length; i++){
+            coefficients.add(d[i]);
+        }
     }
     
     public Polynomial(HashMap<Integer, Double> h){
@@ -143,14 +151,25 @@ public class Polynomial
         return val;
     }
 
-/*    
-    public static double[] roots(Polynomial p){
-        double[] rts = new double[p.getCoefficients().size()];
-        int rootsRemaining = p.getCoefficients().size();
-        if(p.getCoefficients().get(0) == 0.0){
-            rts[0] = 0.0;
-            rootsRemaining--;
-        }    
+    
+    public static ArrayList<ComplexNumber> roots(Polynomial p){
+        ArrayList<ComplexNumber> rts = new ArrayList<>();
+        if (p.getOrder() == 0){
+        }
+        else if (p.getOrder() == 1){
+            rts.add(new ComplexNumber(p.getCoef(0)/p.getCoef(1)*-1.0));
+        }
+        else if (p.getOrder() == 2){
+            rts.add(quadraticRoots(p)[0]);
+            rts.add(quadraticRoots(p)[1]);
+        }
+        else {
+            if (p.getCoef(0) == 0.0){
+                rts.add(new ComplexNumber(0.0));
+                rts.addAll(roots(divide(p,new Polynomial(new double[]{0.0, 1.0}))));
+            }
+            
+        }
         return rts;
     }
     
@@ -286,15 +305,18 @@ public class Polynomial
     }
 
     public static Polynomial divide(Polynomial a, Polynomial b){
-        Polynomial quotient = new Polynomial();
-        if (b.getOrder() == a.getOrder()){
-            quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
+        if (isDivisibleBy(a,b)){
+            Polynomial quotient = new Polynomial();
+            if (b.getOrder() == a.getOrder()){
+                quotient.setCoefficientOfOrderTo(0, a.getCoef(1)/b.getCoef(1)); //assumes that a and b divide with no remainder
+            }
+            else if (a.getOrder() > b.getOrder()){
+                quotient.setCoefficientOfOrderTo(a.getOrder() - b.getOrder(), a.getCoef(a.getOrder())/b.getCoef(b.getOrder()));
+                quotient = add(quotient, divide(subtract(a, multiply(quotient, b)), b));
+            }
+            return quotient;
         }
-        else if (a.getOrder() > b.getOrder()){
-            quotient.setCoefficientOfOrderTo(a.getOrder() - b.getOrder(), a.getCoef(a.getOrder())/b.getCoef(b.getOrder()));
-            quotient = add(quotient, divide(subtract(a, multiply(quotient, b)), b));
-        }
-        return quotient;
+        else return a;
     }
 
     public static boolean isDivisibleBy(Polynomial a, Polynomial b){

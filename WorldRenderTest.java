@@ -8,9 +8,13 @@
  *
  * @author kevinoconnor
  */
+import java.awt.EventQueue;
 import linearalgebra.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.*;
+import java.awt.*;
+
 
 public class WorldRenderTest {
     
@@ -75,6 +79,7 @@ public class WorldRenderTest {
 */
         
 // Testing Polynomial arithmetic
+        /*
         ArrayList<Double> coefs1 = new ArrayList<>();
         coefs1.add(-5.0);
         coefs1.add(1.0);
@@ -119,7 +124,44 @@ public class WorldRenderTest {
         
         Polynomial e = new Polynomial(coefs5);
         
-        
         System.out.println(Polynomial.isDivisibleBy(e, b));
+
+        */
+        
+        
+        // Testing polynomial root finder
+        
+        
+        /* TODO:
+        // PROBLEM 1
+        // isDivisibleBy() does not consider a polynomial with getCoef(0) == 0.0 as being divisible 
+        //  by x.  
+        */
+        /*
+        Polynomial polyA = new Polynomial(new double[]{0.0, 1.0, 2.0, 3.0});
+//        ArrayList<ComplexNumber> rootsA = Polynomial.roots(polyA);
+
+        System.out.println(Polynomial.printPolynomial(Polynomial.divide(polyA, new Polynomial(new double[]{0.0, 1.0}))));
+        System.out.println(Polynomial.isDivisibleBy(polyA, new Polynomial(new double[]{0.0, 1.0})));
+        System.out.println((new Polynomial(new double[]{0.0, 1.0})).getOrder());
+
+        for (int i = 0; i<rootsA.size(); i++){
+            System.out.println(ComplexNumber.printComplexNumber(rootsA.get(i)));
+        }
+        
+        System.out.println(Polynomial.printPolynomial(polyA));
+        */
+        
+        // Testing ObjectSpaceScreen class
+        
+        EventQueue.invokeLater(new Runnable(){
+            public void run(){
+                ObjectSpaceScreen screen = new ObjectSpaceScreen();
+                screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                screen.setVisible(true);
+            }
+        });
+        
+        
     }
 }
