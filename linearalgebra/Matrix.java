@@ -1,3 +1,12 @@
+/* 
+    Author: Kevin O'Connor 
+    Email: worldrenderengine@gmail.com
+    Summer 2015
+*/
+
+
+
+
 package linearalgebra;
 
 

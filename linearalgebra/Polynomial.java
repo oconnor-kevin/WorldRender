@@ -1,7 +1,12 @@
-/*
- * This class is a component of the linearalgebra package written by
- * Kevin O'Connor. 
- */
+/* 
+    Author: Kevin O'Connor 
+    Email: worldrenderengine@gmail.com
+    Summer 2015
+*/
+
+
+
+
 package linearalgebra;
 
 import java.util.ArrayList;

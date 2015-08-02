@@ -1,11 +1,12 @@
-/*
- * This class is a component of the linearalgebra package written by
- * Kevin O'Connor.  
- *
- * ComplexNumber allows for the creation and manipulation of ComplexNumbers
- *  which, at their heart consist of a two dimensional vector with alternate
- *  multiplication and division operations defined for them.  
- */
+/* 
+    Author: Kevin O'Connor 
+    Email: worldrenderengine@gmail.com
+    Summer 2015
+*/
+
+
+
+
 package linearalgebra;
 
 /**

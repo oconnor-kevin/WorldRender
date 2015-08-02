@@ -1,13 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/* 
+    Author: Kevin O'Connor 
+    Email: worldrenderengine@gmail.com
+    Summer 2015
+*/
 
-/**
- *
- * @author kevinoconnor
- */
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +16,6 @@ public class ObjectSpaceScreen extends JFrame {
     
     
     public ObjectSpaceScreen(){
-        setSize(300, 200);
         setTitle("WorldRender");
         setResizable(true);
         setBounds((int) (screenWidth*0.1), (int) (screenHeight*0.1), (int) (screenWidth*0.8), (int) (screenHeight*0.8));
