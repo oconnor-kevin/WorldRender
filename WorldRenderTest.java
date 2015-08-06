@@ -149,6 +149,7 @@ public class WorldRenderTest {
         System.out.println(Polynomial.printPolynomial(polyA));
         */
         
+        /*
         // Testing ObjectSpaceScreen class
         
         EventQueue.invokeLater(new Runnable(){
@@ -158,7 +159,20 @@ public class WorldRenderTest {
                 screen.setVisible(true);
             }
         });
+        */
         
+        // Testing the restructured Vector class.
         
+       Vector vec1 = new Vector(new double[]{1.0,1.0,1.0});
+       Vector vec2 = new Vector(new double[]{1.0,2.0,3.0});
+       
+       System.out.println(vec1.printVector());
+       System.out.println((vec1.dot(vec2)));
+       System.out.println(Vector.dot(vec1, vec2));
+       System.out.println((vec1.cross(vec2)).printVector());
+       System.out.println((Vector.cross(vec1, vec2)).printVector());
+       System.out.println((Vector.multiply(vec1, 45.5)).printVector());
+       vec1.subtract(vec2);
+       System.out.println(vec1.printVector());
     }
 }

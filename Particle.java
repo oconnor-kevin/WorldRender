@@ -78,7 +78,11 @@ public class Particle {
     
     // This method returns a string which describes the attributes of the argument particle.
     public static String printParticle(Particle p){
-        return (String) ("(" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ") \n");
+        String me = "(";
+        for (int i = 0; i<(p.getMassEquivalentValues()).length(); i++){
+            me += p.getMassEquivalentValues().keySet().toArray()[i].printMassEquivalent() + ": " + (p.getMassEquivalentValues).get(p.getMassEquivalentValues.keySet().toArray()[i]);
+        }
+        return p.getPosition().printVector() + p.getVelocity().printVector() + me;
     }
     
     // This method calls printParticle for the active particle.

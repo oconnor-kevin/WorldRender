@@ -15,26 +15,34 @@ public class Vector {
 	
 //------------------------------------------------------------------------------        
 // Constructors
+        // Creates a 1-dimensional zero vector.
 	public Vector(){
 		components = new double[1];}
 	
+        // Creates an n-dimensional zero vector.
 	public Vector(int n){
 		components = new double[n];}
 	
+        // Creates a vector with the components specified by the double array
+        //  a.  
 	public Vector(double[] a){
 		components = a;}
 	
 //------------------------------------------------------------------------------        
 // Accessor Methods
+        // Returns components field.
 	public double[] getComp(){
 		return components;}
 	
+        // Returns the magnitude of the vector.
 	public double getMag(){
 		double a = 0;
 		for (int i=0; i<components.length; i++){
 			a += Math.pow(components[i], 2.0);}
 		return Math.pow(a, 0.5);}
 	
+        // Returns the components of the active vector object in spherical
+        //  coordinates.
 	public double[] getSphereComp(){
 		double[] a = new double[3];
 		if (components.length == 3){
@@ -45,6 +53,8 @@ public class Vector {
 
 //------------------------------------------------------------------------------
 // Mutator Methods
+        // Sets the component at index i of the currect vector object to the 
+        //  double, d.
 	public void set(int i, double d){
 		components[i] = d;
         }
@@ -82,38 +92,24 @@ public class Vector {
                 }
             }
         }
-       
-/*        
-//------------------------------------------------------------------------------
-// Interface Implementation
-        public int compareTo(Comparable vec){
-            Vector v = (Vector) vec;
-            Boolean equal = true;
-            if (v.getComponents().length != getComponents().length){
-                equal = false;
-            }
-            else{
-                for (int i = 0; i<getComponents().length; i++){
-                    if (v.getComponents()[i] != getComponents()[i]){
-                        equal = false;
-                        break;
-                    }
-                }
-            }
-            if (equal == true){
-                return 0;
-            }
-            else if (v.getMagnitude() < getMagnitude()){
-                return 1;
-            }
-            else if (v.getMagnitude() > getMagnitude()){
-                return -1;
-            }
-            else {
-                return -1;
+        
+        // Rotates the current vector object by dPhi in the phi direction.
+        public void rotatePhi(double dPhi){
+            Vector newVec = new Vector(getComp().length);
+            newVec = rotatePhi(this, dPhi);
+            for (int i = 0; i<getComp().length; i++){
+                set(i, newVec.getComp()[i]);
             }
         }
-*/        
+       
+        // Rotates the current vector object by dTheta in the theta direction.
+        public void rotateTheta(double dTheta){
+            Vector newVec = new Vector(getComp().length);
+            newVec = rotateTheta(this, dTheta);
+            for (int i = 0; i<getComp().length; i++){
+                set(i, newVec.getComp()[i]);
+            }
+        }
         
 //------------------------------------------------------------------------------        
 // Methods
@@ -224,7 +220,19 @@ public class Vector {
             return new Vector(c);
         }
         
-        
+        // Returns a formatted String with the components of the active Vector
+        //  object.
+        public String printVector(){
+            String st = "(";
+            for (int i = 0; i<getComp().length; i++){
+                st += getComp()[i];
+                if (i != getComp().length - 1){
+                    st += ", ";
+                }
+            }
+            st += ")";
+            return st;
+        }
         
         
         
