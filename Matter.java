@@ -22,8 +22,12 @@ public class Matter {
     //  system within the object space coordinate system.
     Vector originVelocity;
     
+    // Vector representing the origin of the rotational axis for the matter 
+    //  object.
+    Vector rotationOrigin;
+    
     // Vector representing the rotational velocity of the matter coordinate 
-    //  system within the object space coordinate system.
+    //  system within the object space coordinate system in radians/second.
     Vector rotationalVelocity;
     
     // ArrayList of the particles contained in the matter object.
@@ -47,6 +51,7 @@ public class Matter {
         originPosition = new Vector(3);
         originVelocity = new Vector(3);
         rotationalVelocity = new Vector(3);
+        rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
@@ -57,6 +62,7 @@ public class Matter {
         originPosition = new Vector(3);
         originVelocity = new Vector(3);
         rotationalVelocity = new Vector(3);
+        rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
@@ -67,6 +73,7 @@ public class Matter {
         originPosition = pos;
         originVelocity = vel;
         rotationalVelocity = new Vector(3);
+        rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
@@ -77,6 +84,7 @@ public class Matter {
         originPosition = pos;
         originVelocity = vel;
         rotationalVelocity = new Vector(3);
+        rotationOrigin = new Vector(3);        
         centersOfMassEquivalents = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
@@ -87,6 +95,7 @@ public class Matter {
         originPosition = pos;
         originVelocity = vel;
         rotationalVelocity = rot;
+        rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
@@ -112,6 +121,11 @@ public class Matter {
     // Returns rotationalVelocity field.
     public Vector getRotationalVelocity(){
         return rotationalVelocity;
+    }
+    
+    // Returns rotationOrigin field.
+    public Vector getRotationOrigin(){
+        return rotationOrigin;
     }
     
     // Returns centersOfMassEquivalents field.
@@ -151,6 +165,11 @@ public class Matter {
         rotationalVelocity = newRot;
     }
     
+    // Sets rotationOrigin field to newRotOr argument.
+    public void setRotationOrigin(Vector newRotOr){
+        rotationOrigin = newRotOr;
+    }
+    
     // Sets centersOfMassEquivalents field to newCenters argument.
     public void setCenters(HashMap<String, Vector> newCenters){
         centersOfMassEquivalents = newCenters;
@@ -161,21 +180,29 @@ public class Matter {
         fixed = fix;
     }
     
+    // Adds ArrayList argument to the particles field.
     public void addParticles(ArrayList<Particle> additionalParticles){
-        for(int i = 0; i<additionalParticles.size(); i++){
-            additionalParticles.get(i).setID(id);
-        }
         particles.addAll(additionalParticles);
     }
     
+    // Adds particle argument to the particles field.
     public void addParticle(Particle additionalParticle){
-        additionalParticle.setID(id);
         particles.add(additionalParticle);
     }
     
+    // Sets particles field to an empty ArrayList.
     public void clearAllParticles(){
         particles.clear();
     }
+    
+    // Removes particle argument from the particles field.
+    public void removeParticle(Particle part){
+        particles.remove(part);
+    }
+    
+    
+    
+    
     
 
 //------------------------------------------------------------------------------
