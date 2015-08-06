@@ -12,7 +12,7 @@ public class Particle {
 // Fields // 
     private Vector position;
     private Vector velocity;
-    private HashMap<MassEquivalent, Double> massEquivalentValues;
+    private HashMap<String, Double> massEquivalentValues;
     
 //------------------------------------------------------------------------------    
 // Constructors
@@ -35,7 +35,7 @@ public class Particle {
     
     // Creates a particle with pos set as its position field, vel set as its
     //  velocity field, and massEq set as its massEquivalentValues. 
-    public Particle(Vector pos, Vector vel, HashMap<MassEquivalent, Double> massEq){
+    public Particle(Vector pos, Vector vel, HashMap<String, Double> massEq){
         position = pos;
         velocity = vel;
         massEquivalentValues = massEq;
@@ -72,13 +72,13 @@ public class Particle {
     
     // Adds the mass equivalent me and value val to the massEquivalentValues
     //  hashmap.
-    public void addMassEquivalentValue(MassEquivalent me, double val){
+    public void addMassEquivalentValue(String me, double val){
         massEquivalentValues.put(me, val);
     }
     
     // Removes the mass equivalent me and value val from the 
     //  massEquivalentValues hashmap.
-    public void removeMassEquivalentValue(MassEquivalent me){
+    public void removeMassEquivalentValue(String me){
         massEquivalentValues.remove(me);
     }
         
