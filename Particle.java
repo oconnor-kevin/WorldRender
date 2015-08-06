@@ -65,29 +65,26 @@ public class Particle {
     public void removeMassEquivalentValue(MassEquivalent me){
         massEquivalentValues.remove(me);
     }
+        
+    public void displaceBy(Vector disp){}
     
-    public void timeStep(double timeUnits){
-        setPosition(Vector.addVectors(getPosition(), (Vector.multiplyVectorByScalar(getVelocity(), timeUnits))));
-    }
+    public void rotateAroundAxis(Vector axis, double dTheta){}
+    
+    public void accelerateBy(Vector acc){}
+    
     
 //------------------------------------------------------------------------------    
 // Methods 
     
-// the following is a simplified timeStep method which assumes acceleration << velocity/time    
-    public static Particle timeStep(Particle p, double timeUnits){
-        Vector oldVelocity = new Vector(p.getVelocity().getComponents());
-        Vector newPosition = Vector.addVectors(p.getPosition(), (Vector.multiplyVectorByScalar(p.getVelocity(), timeUnits)));
-        return new Particle(newPosition, p.getVelocity());
-    }
-   
-    public static int generateRandomID(int max){
-        return (int) Math.floor(Math.random()*max);
-    }
-    
+    // This method returns a string which describes the attributes of the argument particle.
     public static String printParticle(Particle p){
-        return (String) (p.getID() + ", (" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ") \n");
+        return (String) ("(" + p.getPosition().getComponents()[0] + ", " + p.getPosition().getComponents()[1] + ", " + p.getPosition().getComponents()[2] + "), (" + p.getVelocity().getComponents()[0] + ", " + p.getVelocity().getComponents()[1] + ", " + p.getVelocity().getComponents()[2] + ") \n");
     }
     
+    // This method calls printParticle for the active particle.
+    public String printParticle(){
+        return printParticle(this);
+    }
 
     
 }
