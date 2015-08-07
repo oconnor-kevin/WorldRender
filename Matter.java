@@ -154,6 +154,10 @@ public class Matter {
         return fixed;
     }
     
+    // Returns the center of the argument mass equivalent.
+    //public Vector getCenter(String massEq){}
+    
+    
 //------------------------------------------------------------------------------    
 // Mutator Methods
     // Sets particles field to argument newParticles.
@@ -186,10 +190,18 @@ public class Matter {
         centersOfMassEquivalents = newCenters;
     }
     
+    // Sets color field to col argument.
+    public void setColor(Color col){
+        matterColor = col;
+    }
+    
     // Sets fixed field to fix argument.
     public void setFix(Boolean fix){
         fixed = fix;
     }
+    
+    
+    
     
     // Adds ArrayList argument to the particles field.
     public void addParticles(ArrayList<Particle> additionalParticles){
@@ -211,6 +223,26 @@ public class Matter {
         particles.remove(part);
     }
     
+    // Moves position of the origin of the active matter object within the 
+    //  frame of the object space by the argument vector.
+    public void displaceBy(Vector disp){}
+    
+    // Adds Vector argument to the velocity field of the active matter object.
+    public void addVelocity(Vector dVel){}
+    
+    // Adds the argument to the rotation of the matter object.
+    //  NOTE: I have no idea how to implement this method or what this method 
+    //   needs as its argument.  Will do more research before moving forward.
+    public void addRotation(){}
+    
+    // Adds the argument String and vector pair to the list of centers of 
+    //  mass equivalents.  
+    public void addCenter(String massEq, Vector cen){}
+    
+    // Removes the argument massEq (String) from the list of centers of mass
+    //  equivalents.
+    public void removeCenter(String massEq){}
+    
     
     
     
@@ -218,31 +250,12 @@ public class Matter {
 
 //------------------------------------------------------------------------------
 // Methods
-    public static ArrayList<Vector> particleDisplacement(Matter a, Matter b){
-        ArrayList<Vector> particleDisplacements = new ArrayList<Vector>();
-        if (a.getParticles().size() == b.getParticles().size()){
-            for (int i = 0; i<a.getParticles().size(); i++){
-                particleDisplacements.add(Vector.addVectors(a.getParticles().get(i).getPosition(), Vector.multiplyVectorByScalar(b.getParticles().get(i).getPosition(), -1.0)));
-            }
-        }
-        return particleDisplacements;
-    }
+    // Returns a vector corresponding to the center of the argument mass 
+    //  equivalent in the frame of the Matter object.
+    //public Vector calculateCenter(String massEq){}
     
-    public static Matter incrementTime(Matter m, double timeUnits){
-        ArrayList<Particle> newParticles = new ArrayList<Particle>();
-        for(int i = 0; i<m.getParticles().size(); i++){
-            newParticles.add(Particle.timeStep(m.getParticles().get(i), timeUnits));
-        }
-        return new Matter(newParticles);
-    }
     
-    public static String printParticles(Matter m){
-        String s = "";
-        for (int i = 0; i<m.getParticles().size(); i++){
-            s += Particle.printParticle(m.getParticles().get(i));
-        }
-        s += " \n";
-        return s;
-    }
-
+    
 }
+
+
