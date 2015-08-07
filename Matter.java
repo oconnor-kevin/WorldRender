@@ -101,6 +101,17 @@ public class Matter {
         fixed = fix;
     }
     
+    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix, HashMap centers){
+        particles = parts;
+        originPosition = pos;
+        originVelocity = vel;
+        rotationalVelocity = rot;
+        rotationOrigin = new Vector(3);
+        centersOfMassEquivalents = centers;
+        matterColor = Color.BLACK;
+        fixed = fix;
+    }
+    
 //------------------------------------------------------------------------------    
 // Accessor Methods    
     // Returns particles field.
