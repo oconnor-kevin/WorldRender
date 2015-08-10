@@ -254,9 +254,18 @@ public class Matter {
     }
     
     // Fills centersOfMassEquivalents field with the existing massEquivs.
-    public void fillCenters(){}
+    public void fillCenters(){
+        if (particles.size() > 0){
+            for (int i = 0; i<particles.get(0).getMassEquivalentValues().keySet().size(); i++){
+                calcAndAddCenter((String) particles.get(0).getMassEquivalentValues().keySet().toArray()[i]);
+            }
+        }
+    }
     
-    
+    // Calculates and adds the center of the argument mass equivalent.
+    public void calcAndAddCenter(String massEq){
+        addCenter(massEq, calculateCenter(massEq));
+    }
     
 
 //------------------------------------------------------------------------------
