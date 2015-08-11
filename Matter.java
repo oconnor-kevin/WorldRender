@@ -23,12 +23,12 @@ public class Matter {
     Vector originVelocity;
     
     // Vector representing the origin of the rotational axis for the matter 
-    //  object.
+    //  object.  In most cases this should be the center of mass.
     Vector rotationOrigin;
     
-    // Vector representing the rotational velocity of the matter coordinate 
-    //  system within the object space coordinate system in radians/second.
-    Vector rotationalVelocity;
+    // An array of three doubles which represents the rotational velocity of the
+    //  mater object about each of the three axes.
+    double[] rotationalVelocity;
     
     // ArrayList of the particles contained in the matter object.
     ArrayList<Particle> particles;
@@ -55,7 +55,7 @@ public class Matter {
         particles = new ArrayList<>();
         originPosition = new Vector(3);
         originVelocity = new Vector(3);
-        rotationalVelocity = new Vector(3);
+        rotationalVelocity = new double[]{0.0, 0.0, 0.0};
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
@@ -67,7 +67,7 @@ public class Matter {
         particles = parts;
         originPosition = new Vector(3);
         originVelocity = new Vector(3);
-        rotationalVelocity = new Vector(3);
+        rotationalVelocity = new double[]{0.0, 0.0, 0.0};
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
@@ -79,7 +79,7 @@ public class Matter {
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
-        rotationalVelocity = new Vector(3);
+        rotationalVelocity = new double[]{0.0, 0.0, 0.0};
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
@@ -91,7 +91,7 @@ public class Matter {
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
-        rotationalVelocity = new Vector(3);
+        rotationalVelocity = new double[]{0.0, 0.0, 0.0};
         rotationOrigin = new Vector(3);        
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
@@ -99,7 +99,7 @@ public class Matter {
         fixed = fix;
     }
     
-    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix){
+    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, double[] rot, Boolean fix){
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
@@ -111,7 +111,7 @@ public class Matter {
         fixed = fix;
     }
     
-    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix, HashMap centers, HashMap values){
+    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, double[] rot, Boolean fix, HashMap centers, HashMap values){
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
@@ -141,7 +141,7 @@ public class Matter {
     }
     
     // Returns rotationalVelocity field.
-    public Vector getRotationalVelocity(){
+    public double[] getRotationalVelocity(){
         return rotationalVelocity;
     }
     
@@ -194,7 +194,7 @@ public class Matter {
     }
     
     // Sets rotationalVelocity field to newRot argument.
-    public void setRotation(Vector newRot){
+    public void setRotation(double[] newRot){
         rotationalVelocity = newRot;
     }
     
