@@ -258,9 +258,11 @@ public class Matter {
     }
     
     // Adds the argument to the rotation of the matter object.
-    //  NOTE: I have no idea how to implement this method or what this method 
-    //   needs as its argument.  Will do more research before moving forward.
-    public void addRotation(){}
+    public void addRotation(double[] dRot){
+        for (int i = 0; i<3; i++){
+            rotationalVelocity[i] += dRot[i];
+        }
+    }
     
     // Adds the argument String and vector pair to the list of centers of 
     //  mass equivalents.  
@@ -312,6 +314,13 @@ public class Matter {
                 calcAndAddME((String) particles.get(0).getMassEquivalentValues().keySet().toArray()[i]);
             }
         }
+    }
+    
+    // Rotates the matter object about its rotation origin according to the 
+    //  argument array where elements denote the number of radians which the 
+    //  object is to be rotated about the corresponding axis.
+    public void rotate(double[] rot){
+        
     }
 
 //------------------------------------------------------------------------------
