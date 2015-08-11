@@ -1,3 +1,6 @@
+
+import linearalgebra.Vector;
+
 /*
  * The MIT License
  *
@@ -28,44 +31,21 @@
     Summer 2015
 */
 
-import linearalgebra.*;
 
-public abstract class Force {
-// Fields
-    // Constant which will be used when calculating force vectors for 
-    //  interacting matter.
-    public final double coefficient;
-    
-    // Mass Equivalent which the force uses.
-    public final String massEquivalent;
-    
-// Constructors
-    public Force(){
-        coefficient = 0;
-        massEquivalent = "";
+
+public class RadialForce extends Force{
+    // Implements the two argument interact method.
+    public Vector interact(Matter a, Matter b){
+        Vector rad = Vector.subtract((Vector) b.getCentersOfMassEquivalents().get(super.massEquivalent), (Vector) a.getCentersOfMassEquivalents().get(super.massEquivalent));
+        double nume = super.coefficient * (double) a.getMEqVal().get(super.massEquivalent)* (double) b.getMEqVal().get(super.massEquivalent);
+        Vector force = Vector.multiply(rad, 1.0/rad.getMag());
+        return Vector.multiply(force, nume/(rad.getMag() * rad.getMag()));
     }
     
-    public Force(double coef, String massE){
-        coefficient = coef;
-        massEquivalent = massE;
+    // Implements the one argument interact method to make the class concrete.  
+    //  Since a radial force requires two objects, this version of the interact
+    //  method does nothing.
+    public Vector interact(Matter a){
+        return new Vector(new double[]{0.0, 0.0, 0.0});
     }
-    
-// Accessor Methods
-    public double getCoef(){
-        return coefficient;
-    }
-    
-    public String getME(){
-        return massEquivalent;
-    }
-    
-// Methods
-    // Matter interaction method which alters velocity of the argument Matter
-    //  object a from its interaction with Matter object b.
-    public abstract Vector interact(Matter a, Matter b);
-    
-    // Matter interaction method which alters velocity of the argument Matter 
-    //  object a according to the force it currently feels.  
-    public abstract Vector interact(Matter a);
-    
 }
