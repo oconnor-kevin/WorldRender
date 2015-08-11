@@ -167,12 +167,12 @@ public class Matrix {
  
         public static Vector multiplyVectorByMatrix(Vector v, Matrix m){
             Vector v2 = new Vector(m.getElements().length);
-            if (v.getComponents().length == m.getElements()[0].length){
+            if (v.getComp().length == m.getElements()[0].length){
                 for (int i = 0; i<m.getElements().length; i++){
                     double sum = 0.0;
                     for (int j = 0; j<m.getElements()[0].length; j++){
-                        sum += m.getElements()[i][j]*v.getComponents()[j];}
-                    v2.getComponents()[i] = sum;}}
+                        sum += m.getElements()[i][j]*v.getComp()[j];}
+                    v2.getComp()[i] = sum;}}
             return v2;}
 }
 

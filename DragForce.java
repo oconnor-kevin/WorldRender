@@ -22,50 +22,31 @@
  * THE SOFTWARE.
  */
 
-/* 
-    Author: Kevin O'Connor 
-    Email: worldrenderengine@gmail.com
-    Summer 2015
-*/
+/**
+ *
+ * @author kevinoconnor
+ */
 
 import linearalgebra.*;
 
-public abstract class Force {
-// Fields
-    // Constant which will be used when calculating force vectors for 
-    //  interacting matter.
-    public double coefficient;
-    
-    // Mass Equivalent which the force uses.
-    public String massEquivalent;
-    
-// Constructors
-    public Force(){
-        coefficient = 0;
-        massEquivalent = "";
-    }
-    
-    public Force(double coef, String massE){
+public class DragForce extends Force {
+// Constructor
+    public DragForce(double coef){
         coefficient = coef;
-        massEquivalent = massE;
-    }
-    
-// Accessor Methods
-    public double getCoef(){
-        return coefficient;
-    }
-    
-    public String getME(){
-        return massEquivalent;
     }
     
 // Methods
-    // Matter interaction method which alters velocity of the argument Matter
-    //  object a from its interaction with Matter object b.
-    public abstract Vector interact(Matter a, Matter b);
+    // Implements one argument interact method for a drag force.
+    @Override
+    public Vector interact(Matter a){
+        double mag = coefficient * Vector.dot(a.getOriginVelocity(), a.getOriginVelocity());
+        Vector dir = Vector.multiply(a.getOriginVelocity(), -1.0 * a.getOriginVelocity().getMag());
+        return Vector.multiply(dir, mag);
+    }
     
-    // Matter interaction method which alters velocity of the argument Matter 
-    //  object a according to the force it currently feels.  
-    public abstract Vector interact(Matter a);
-    
+    // Implements two argument interact method to make the class concrete.
+    @Override 
+    public Vector interact(Matter a, Matter b){
+        return new Vector(new double[]{0.0, 0.0, 0.0});
+    }
 }

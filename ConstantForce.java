@@ -30,42 +30,28 @@
 
 import linearalgebra.*;
 
-public abstract class Force {
+public class ConstantForce extends Force {
 // Fields
-    // Constant which will be used when calculating force vectors for 
-    //  interacting matter.
-    public double coefficient;
-    
-    // Mass Equivalent which the force uses.
-    public String massEquivalent;
+    // A unit vector to denote the direction of this force.
+    private Vector direction;
     
 // Constructors
-    public Force(){
-        coefficient = 0;
-        massEquivalent = "";
+    public ConstantForce(double coef, Vector dir){
+        coefficient  = coef;
+        direction = dir;
     }
     
-    public Force(double coef, String massE){
-        coefficient = coef;
-        massEquivalent = massE;
+// Methods    
+    // Implements the single argument interact method for a constant force.
+    @Override
+    public Vector interact(Matter a){
+        return Vector.multiply(direction, coefficient);
     }
     
-// Accessor Methods
-    public double getCoef(){
-        return coefficient;
+    // Implements the double argument interact method to make the class c
+    //  concrete.
+    @Override
+    public Vector interact(Matter a, Matter b){
+        return new Vector(new double[]{0.0, 0.0, 0.0});
     }
-    
-    public String getME(){
-        return massEquivalent;
-    }
-    
-// Methods
-    // Matter interaction method which alters velocity of the argument Matter
-    //  object a from its interaction with Matter object b.
-    public abstract Vector interact(Matter a, Matter b);
-    
-    // Matter interaction method which alters velocity of the argument Matter 
-    //  object a according to the force it currently feels.  
-    public abstract Vector interact(Matter a);
-    
 }

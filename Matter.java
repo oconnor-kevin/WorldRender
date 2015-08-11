@@ -111,15 +111,15 @@ public class Matter {
         fixed = fix;
     }
     
-    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, double[] rot, Boolean fix, HashMap centers, HashMap values){
+    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, double[] rot, Boolean fix, HashMap centers, HashMap values, Vector rotOri, Color col){
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
         rotationalVelocity = rot;
-        rotationOrigin = new Vector(3);
+        rotationOrigin = rotOri;
         centersOfMassEquivalents = centers;
         massEquivalentValues = values;
-        matterColor = Color.BLACK;
+        matterColor = col;
         fixed = fix;
     }
     
@@ -222,9 +222,7 @@ public class Matter {
     public void setFix(Boolean fix){
         fixed = fix;
     }
-    
-    
-    
+   
     
     // Adds ArrayList argument to the particles field.
     public void addParticles(ArrayList<Particle> additionalParticles){

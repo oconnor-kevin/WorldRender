@@ -1,6 +1,3 @@
-
-import linearalgebra.Vector;
-
 /*
  * The MIT License
  *
@@ -31,10 +28,18 @@ import linearalgebra.Vector;
     Summer 2015
 */
 
-
+import linearalgebra.*;
 
 public class RadialForce extends Force{
+// Constructors
+    public RadialForce(double coef, String me){
+        coefficient = coef;
+        massEquivalent = me;
+    }
+    
+// Methods    
     // Implements the two argument interact method.
+    @Override
     public Vector interact(Matter a, Matter b){
         Vector rad = Vector.subtract((Vector) b.getCentersOfMassEquivalents().get(super.massEquivalent), (Vector) a.getCentersOfMassEquivalents().get(super.massEquivalent));
         double nume = super.coefficient * (double) a.getMEqVal().get(super.massEquivalent)* (double) b.getMEqVal().get(super.massEquivalent);
@@ -45,6 +50,7 @@ public class RadialForce extends Force{
     // Implements the one argument interact method to make the class concrete.  
     //  Since a radial force requires two objects, this version of the interact
     //  method does nothing.
+    @Override
     public Vector interact(Matter a){
         return new Vector(new double[]{0.0, 0.0, 0.0});
     }

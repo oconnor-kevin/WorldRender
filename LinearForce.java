@@ -22,50 +22,33 @@
  * THE SOFTWARE.
  */
 
-/* 
-    Author: Kevin O'Connor 
-    Email: worldrenderengine@gmail.com
-    Summer 2015
-*/
+/**
+ *
+ * @author kevinoconnor
+ */
 
 import linearalgebra.*;
 
-public abstract class Force {
+public class LinearForce extends Force{
 // Fields
-    // Constant which will be used when calculating force vectors for 
-    //  interacting matter.
-    public double coefficient;
-    
-    // Mass Equivalent which the force uses.
-    public String massEquivalent;
+    Vector direction;
     
 // Constructors
-    public Force(){
-        coefficient = 0;
-        massEquivalent = "";
-    }
-    
-    public Force(double coef, String massE){
+    public LinearForce(double coef, String me){
         coefficient = coef;
-        massEquivalent = massE;
-    }
-    
-// Accessor Methods
-    public double getCoef(){
-        return coefficient;
-    }
-    
-    public String getME(){
-        return massEquivalent;
+        massEquivalent = me;
     }
     
 // Methods
-    // Matter interaction method which alters velocity of the argument Matter
-    //  object a from its interaction with Matter object b.
-    public abstract Vector interact(Matter a, Matter b);
+    // Implements the one argument interact method for a linear force.
+    @Override
+    public Vector interact(Matter a){
+        return Vector.multiply(direction, coefficient * (double) a.getMEqVal().get(massEquivalent));
+    }
     
-    // Matter interaction method which alters velocity of the argument Matter 
-    //  object a according to the force it currently feels.  
-    public abstract Vector interact(Matter a);
-    
+    // Implements the two argument interact method to make the class concrete.
+    @Override
+    public Vector interact(Matter a, Matter b){
+        return new Vector(new double[]{0.0, 0.0, 0.0});
+    }
 }
