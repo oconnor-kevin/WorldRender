@@ -16,19 +16,25 @@ public class Matrix {
 	
 // Constructors
 	public Matrix(){
-		elements = new double[1][1];}
+		elements = new double[1][1];
+        }
 	
         public Matrix(double[][] a){
-		elements = a;}
+		elements = a;
+        }
 	
         public Matrix(int m, int n){
-		elements = new double[m][n];}
-	// Accessor Methods
+		elements = new double[m][n];
+        }
+        
+// Accessor Methods
 	public double[][] getElements(){
-		return elements;}
+		return elements;
+        }
 	
 	public void setElementAtIndex(int i, int j, double d){
-		elements[i][j] = d;}
+		elements[i][j] = d;
+        }
 	
 // Methods
 	public static double getTrace(Matrix a){
@@ -56,8 +62,8 @@ public class Matrix {
                         b.setElementAtIndex(i,j,a.getElements()[j][i]);}}
             return b;}
 
-        public static Vector multiplyMatrixByVector(Matrix a, Vector b){
-            Matrix c = new Matrix(new double[][]{b.getComponents()});
+        public static Vector multiply(Matrix a, Vector b){
+            Matrix c = new Matrix(new double[][]{b.getComp()});
             return new Vector(matrixMultiply(c,a).getElements()[0]);}
         
         public static Matrix scalarMultiply(double a, Matrix b){
@@ -110,6 +116,33 @@ public class Matrix {
             for (int j = 0; j < i; j++){
                     a.getElements()[j][j] = 1.0;}
             return a;}
+        
+        public static Matrix xRot(double theta){
+            Matrix mat = identityMatrix(3);
+            mat.setElementAtIndex(1,1, Math.cos(theta));
+            mat.setElementAtIndex(1,2, -1.0*Math.sin(theta));
+            mat.setElementAtIndex(2,1, Math.sin(theta));
+            mat.setElementAtIndex(2,2, Math.cos(theta));
+            return mat;
+        }
+        
+        public static Matrix yRot(double theta){
+            Matrix mat = identityMatrix(3);
+            mat.setElementAtIndex(0,0, Math.cos(theta));
+            mat.setElementAtIndex(0,2, Math.sin(theta));
+            mat.setElementAtIndex(2, 0, -1.0*Math.sin(theta));
+            mat.setElementAtIndex(2,2, Math.cos(theta));
+            return mat;
+        }    
+        
+        public static Matrix zRot(double theta){
+            Matrix mat = identityMatrix(3);
+            mat.setElementAtIndex(0, 0, Math.cos(theta));
+            mat.setElementAtIndex(0, 1, -1.0*Math.sin(theta));
+            mat.setElementAtIndex(1, 0, Math.sin(theta));
+            mat.setElementAtIndex(1, 1, Math.cos(theta));
+            return mat;
+        }
         
 // TODO: implement an invert method that works for all square matrices        
         

@@ -320,7 +320,18 @@ public class Matter {
     //  argument array where elements denote the number of radians which the 
     //  object is to be rotated about the corresponding axis.
     public void rotate(double[] rot){
+        // getting center of mass position in matter frame
+        Vector cenMass = Vector.subtract(centersOfMassEquivalents.get("Mass"), originPosition);
         
+        // setting the center of mass as the origin, rotating, and replacing
+        //  each particle.
+        for (int i = 0; i< particles.size(); i++){
+            particles.get(i).displaceBy(Vector.multiply(cenMass, -1.0));
+            particles.get(i).rotateAroundAxis(new Vector(new double[]{1.0, 0.0, 0.0}), rot[0]);
+            particles.get(i).rotateAroundAxis(new Vector(new double[]{0.0, 1.0, 0.0}), rot[1]);
+            particles.get(i).rotateAroundAxis(new Vector(new double[]{0.0, 0.0, 1.0}), rot[2]);
+            particles.get(i).displaceBy(cenMass);
+        }
     }
 
 //------------------------------------------------------------------------------

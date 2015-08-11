@@ -111,6 +111,30 @@ public class Vector {
             }
         }
         
+        // Rotates the current vector object by dTheta about the x axis.
+        public void xRot(double dTheta){
+            Vector newVec = Matrix.multiply(Matrix.xRot(dTheta), this);
+            for (int i = 0; i<3; i++){
+                set(i, newVec.getComp()[i]);
+            }
+        }
+        
+        // Rotates the current vector object by dTheta about the y axis.
+        public void yRot(double dTheta){
+            Vector newVec = Matrix.multiply(Matrix.yRot(dTheta), this);
+            for (int i = 0; i<3; i++){
+                set(i, newVec.getComp()[i]);
+            }
+        }
+        
+        // Rotates the current vector object by dTheta about the z axis.
+        public void zRot(double dTheta){
+            Vector newVec = Matrix.multiply(Matrix.zRot(dTheta), this);
+            for (int i = 0; i<3; i++){
+                set(i, newVec.getComp()[i]);
+            }
+        }
+        
 //------------------------------------------------------------------------------        
 // Methods
         // Returns the Vector sum of the two vectors, a and b.
