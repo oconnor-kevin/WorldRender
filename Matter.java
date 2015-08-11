@@ -37,6 +37,11 @@ public class Matter {
     //  the object space frame.
     HashMap<String, Vector> centersOfMassEquivalents;
     
+    // A hashmap of the mass equivalents and there values for the matter object.
+    //  This can be calculated from the particles contained in the matter object
+    //  or assigned manually.
+    HashMap<String, Double> massEquivalentValues;
+    
     // The color fo the matter object if it is to be rendered.
     Color matterColor;
     
@@ -53,6 +58,7 @@ public class Matter {
         rotationalVelocity = new Vector(3);
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
+        massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
     }
@@ -64,6 +70,7 @@ public class Matter {
         rotationalVelocity = new Vector(3);
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
+        massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
     }
@@ -75,6 +82,7 @@ public class Matter {
         rotationalVelocity = new Vector(3);
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
+        massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
     }
@@ -86,6 +94,7 @@ public class Matter {
         rotationalVelocity = new Vector(3);
         rotationOrigin = new Vector(3);        
         centersOfMassEquivalents = new HashMap();
+        massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
     }
@@ -97,17 +106,19 @@ public class Matter {
         rotationalVelocity = rot;
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = new HashMap();
+        massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
     }
     
-    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix, HashMap centers){
+    public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix, HashMap centers, HashMap values){
         particles = parts;
         originPosition = pos;
         originVelocity = vel;
         rotationalVelocity = rot;
         rotationOrigin = new Vector(3);
         centersOfMassEquivalents = centers;
+        massEquivalentValues = values;
         matterColor = Color.BLACK;
         fixed = fix;
     }
@@ -142,6 +153,11 @@ public class Matter {
     // Returns centersOfMassEquivalents field.
     public HashMap getCentersOfMassEquivalents(){
         return centersOfMassEquivalents;
+    }
+    
+    // Returns massEquivalentValues field.
+    public HashMap getMEqVal(){
+        return massEquivalentValues;
     }
    
     // Returns matterColor field.
@@ -190,6 +206,11 @@ public class Matter {
     // Sets centersOfMassEquivalents field to newCenters argument.
     public void setCenters(HashMap<String, Vector> newCenters){
         centersOfMassEquivalents = newCenters;
+    }
+    
+    // Sets massEquivalentValues field to newValues argument.
+    public void setMassEq(HashMap<String, Double> newValues){
+        massEquivalentValues = newValues;
     }
     
     // Sets color field to col argument.
@@ -267,6 +288,31 @@ public class Matter {
         addCenter(massEq, calculateCenter(massEq));
     }
     
+    // Adds a mass equivalent - value pair to the massEquivalentValues field.
+    public void addMEqVal(String massEq, double val){
+        massEquivalentValues.put(massEq, val);
+    }
+    
+    // Removes a mass equivalent - value pair from the massEquivalentValues
+    //  field.
+    public void removeMEqVal(String massEq){
+        massEquivalentValues.remove(massEq);
+    }
+    
+    // Calculates and adds a mass equivalent value to the massEquivalentValues 
+    //  field.
+    public void calcAndAddME(String massEq){
+        addMEqVal(massEq, calculateME(massEq));
+    }
+    
+    // Fills out all mass equivalent values.
+    public void fillME(){
+        if (particles.size() > 0){
+            for (int i = 0; i<particles.get(0).getMassEquivalentValues().keySet().size(); i++){
+                calcAndAddME((String) particles.get(0).getMassEquivalentValues().keySet().toArray()[i]);
+            }
+        }
+    }
 
 //------------------------------------------------------------------------------
 // Methods
@@ -282,7 +328,14 @@ public class Matter {
         return Vector.multiply(mR, 1.0/total);
     }
     
-    
+    // Calculates the mass equivalent value for a given mass equivalent.
+    public double calculateME(String massEq){
+        double total = 0.0;
+        for (int i = 0; i<particles.size(); i++){
+            total += (double) particles.get(i).getMassEquivalentValues().get(massEq);
+        }
+        return total;
+    }
     
 }
 

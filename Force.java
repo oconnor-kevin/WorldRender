@@ -33,10 +33,10 @@ public abstract class Force {
 // Fields
     // Constant which will be used when calculating force vectors for 
     //  interacting matter.
-    private final double coefficient;
+    public final double coefficient;
     
     // Mass Equivalent which the force uses.
-    private final String massEquivalent;
+    public final String massEquivalent;
     
 // Constructors
     public Force(){
