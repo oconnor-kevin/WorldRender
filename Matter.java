@@ -356,6 +356,16 @@ public class Matter {
         }
     }
 
+    // Steps the matter object forward in time, changing position based on 
+    //  velocity and particle arrangement based on rotation.  Does not take
+    //  forces into account.
+    public void timeStep(double time){
+        if (!fixed){
+            displaceBy(Vector.multiply(originVelocity, time));
+            rotate(new double[]{rotationalVelocity[0]*time, rotationalVelocity[1]*time, rotationalVelocity[2]*time});
+        }
+    }
+    
 //------------------------------------------------------------------------------
 // Methods
     // Returns a vector corresponding to the center of the argument mass 

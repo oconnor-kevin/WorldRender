@@ -36,134 +36,136 @@ public class ObjectSpace {
 
 //------------------------------------------------------------------------------    
 // Fields    
-    private ArrayList<Matter> pastActiveMatter;
+    // The list of matter objects that are active in the space.
     private ArrayList<Matter> activeMatter;
-    private Vector nextCollision;
+    
+    // The time increment which will be used when time stepping the objects in
+    //  the space.
+    private double timeIncrement;
+    
+    // The time that the object space has been evolving.
+    private double time;
+    
+    // A list of the active forces in the object space.
+    private ArrayList<Force> activeForces;
+    
 
 //------------------------------------------------------------------------------    
 // Constructors
     public ObjectSpace(){
         activeMatter = new ArrayList<>();
-        pastActiveMatter = new ArrayList<>();
-        nextCollision = new Vector();
+        timeIncrement = 1.0;
+        time = 0.0;
     }
     
-    public ObjectSpace(ArrayList<Matter> a, ArrayList<Matter> b){
-        activeMatter = a;
-        pastActiveMatter = b;
-        nextCollision = new Vector();
-    }
-    
-    public ObjectSpace(ArrayList<Matter> a){
-        activeMatter = a;
-        pastActiveMatter = new ArrayList<>();
-        nextCollision = new Vector();
+    public ObjectSpace(ArrayList<Matter> mat, double inc, double ti, ArrayList<Force> fo){
+        activeMatter = mat;
+        timeIncrement = inc;
+        time = ti;
+        activeForces = fo;
     }
     
 // -----------------------------------------------------------------------------    
 // Accessor Methods
-    public ArrayList<Matter> getActiveMatter(){
+    // Returns active matter field.
+    public ArrayList<Matter> getMatter(){
         return activeMatter;
     }
     
-    public ArrayList<Matter> getPastActiveMatter(){
-        return pastActiveMatter;
+    // Returns time increment field.
+    public double getTimeInc(){
+        return timeIncrement;
+    }
+    
+    // Returns time field.
+    public double getTime(){
+        return time;
+    }
+    
+    // Returns the active forces field.
+    public ArrayList<Force> getForces(){
+        return activeForces;
     }
     
 //-----------------------------------------------------------------------------    
 // Mutator Methods
+    // Adds argument matter object to the list of active matter in the space.
     public void addMatter(Matter m){
-        pastActiveMatter.add(new Matter());
         activeMatter.add(m);
     }
     
+    // Removes the argument matter object from the list of active matter in the 
+    //  space.
     public void removeMatter(Matter m){
-        pastActiveMatter.add(m);
-        activeMatter.set(activeMatter.indexOf(m), new Matter());
+        activeMatter.remove(m);
     }
     
+    // Removes all matter objects from the object space.
     public void clearObjectSpace(){
-        for (int i = 0; i<activeMatter.size(); i++){
-            removeMatter(activeMatter.get(i));
-        }
+        activeMatter.clear();
     }
 
-// for now this method assumes no collisions and one time unit increment
-    public void incrementTime(double timeUnits){
-        pastActiveMatter = activeMatter;
-        ArrayList<Matter> newActiveMatter = new ArrayList<Matter>();
-        for (int i = 0; i<activeMatter.size(); i++){
-            newActiveMatter.add(Matter.incrementTime(activeMatter.get(i), timeUnits));
-        }
-        activeMatter = newActiveMatter;
+    // Sets time increment field to the argument.
+    public void setTimeInc(double newInc){
+        timeIncrement = newInc;
     }
     
-// starting with least efficient algorithm, will adjust later
-/* TODO: make collisionCheck algorithm efficient 
-    */
-    
-    public boolean collisionCheck(double timeUnits){
-        boolean collided = false;
-        ObjectSpace testOS = new ObjectSpace(this.getActiveMatter(), this.getPastActiveMatter());
-        testOS.incrementTime(timeUnits);
-        ArrayList<Vector> initialPositions = new ArrayList<>();
-        ArrayList<Vector> finalPositions = new ArrayList<>();
-        for (int i = 0; i<testOS.getActiveMatter().size(); i++){
-            for (int j = 0; j<testOS.getActiveMatter().get(i).getParticles().size(); j++){
-                initialPositions.add(testOS.getPastActiveMatter().get(i).getParticles().get(j).getPosition());
-                finalPositions.add(testOS.getActiveMatter().get(i).getParticles().get(j).getPosition());
-            }
-        }
-        int[] collisionIndices = new int[2];
-        for (int i = 0; i<initialPositions.size(); i++){
-            for (int j = i; j<initialPositions.size(); j++){
-                if (!collided){    
-                    if (i != j) {
-                        if (Math.max(finalPositions.get(i).getComponents()[0], initialPositions.get(i).getComponents()[0]) >= Math.min(finalPositions.get(j).getComponents()[0], initialPositions.get(j).getComponents()[0]) &&
-                               Math.max(finalPositions.get(j).getComponents()[0], initialPositions.get(j).getComponents()[0]) >= Math.min(finalPositions.get(i).getComponents()[0], initialPositions.get(i).getComponents()[0]) &&
-                               Math.max(finalPositions.get(i).getComponents()[1], initialPositions.get(i).getComponents()[1]) >= Math.min(finalPositions.get(j).getComponents()[1], initialPositions.get(j).getComponents()[1]) &&
-                               Math.max(finalPositions.get(j).getComponents()[1], initialPositions.get(j).getComponents()[1]) >= Math.min(finalPositions.get(i).getComponents()[1], initialPositions.get(i).getComponents()[1]) &&
-                               Math.max(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2]) >= Math.min(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) &&
-                               Math.max(finalPositions.get(j).getComponents()[2], initialPositions.get(j).getComponents()[2]) >= Math.min(finalPositions.get(i).getComponents()[2], initialPositions.get(i).getComponents()[2])){
-                            collided = true;
-                            collisionIndices[0] = i;
-                            collisionIndices[1] = j;
-                        }
-                    }
-                }
-            }
-        }
-        nextCollision = Vector.multiplyVectorByScalar(Vector.addVectors(Vector.multiplyVectorByScalar(Vector.addVectors(finalPositions.get(collisionIndices[0]), initialPositions.get(collisionIndices[0])), 0.5),
-                Vector.multiplyVectorByScalar(Vector.addVectors(finalPositions.get(collisionIndices[1]), initialPositions.get(collisionIndices[1])), 0.5)), 0.5);
-        return collided;
+    // Sets time field to the argument.
+    public void setTime(double newTime){
+        time = newTime;
     }
     
+    // Increments the time field by the time increment field.
+    public void incTime(){
+        time += timeIncrement;
+    }
+    
+    // Sets the active forces field to the argument.
+    public void setForces(ArrayList<Force> newForces){
+        activeForces = newForces;
+    }
+    
+    // Adds the argument force to the active forces field.
+    public void addForce(Force fo){
+        activeForces.add(fo);
+    }
+    
+    // Removes the argument force from the active forces field.
+    public void removeForce(Force fo){
+        activeForces.remove(fo);
+    }
+    
+    // Time steps the object space by the time increment field.
+    public void timeStep(){}
+    
+    // Alters velocity and rotational velocity of two Matter objects as if 
+    //  collided.  Takes a third boolean argument indicating whether the 
+    //  collision can be considered elastic.
+    public void collide(Matter a, Matter b, boolean elastic){}
+    
+    // Acts the relevant one argument forces upon the argument matter object.
+    public void actForces(Matter a){}
+    
+    // Acts the relevant two argument forces upon the argument matter object.  
+    //  Specifically, will alter the first argument's properties as a result of
+    //  forces from the second object.
+    public void actForces(Matter a, Matter b){}
+    
+    // Acts all forces upon each matter object in the object space.
+    public void actAll(){}
+    
+
 //------------------------------------------------------------------------------
 // Methods
-    public static String printObjectSpace(ObjectSpace o){
-        String s = "";
-        for (int i = 0; i<o.getActiveMatter().size(); i++){
-            s += Matter.printParticles(o.getActiveMatter().get(i));
-        }
-        return s;
-    }
 
-    public static ArrayList<Vector> combineArrayLists(ArrayList<Vector> a, ArrayList<Vector> b){
-        ArrayList<Vector> c = new ArrayList<Vector>();
-        for (int i = 0; i<a.size(); i++){
-            c.add(a.get(i));
-        }
-        for (int i = 0; i<b.size(); i++){
-            c.add(b.get(i));
-        }
-        return c;
-    }
     
-    public static ArrayList<Vector> combineListOfArrayLists(ArrayList<ArrayList<Vector>> a){
-        ArrayList<Vector> b = new ArrayList<Vector>();
-        for (int i = 0; i<a.size(); i++){
-            b = combineArrayLists(b, a.get(i));
-        }
-        return b;
-    }
+    // Checks whether a collision is expected between the two argument matter
+    //  objects in the next time step.
+    //public boolean collisionCheck(Matter a, Matter b){}
+    
+    // Prints a String representation of the object space for purposes of 
+    //  writing file data.
+    //public String printObjectSpace(){}
+    
+    
 }
