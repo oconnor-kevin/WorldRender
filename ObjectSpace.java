@@ -155,6 +155,11 @@ public class ObjectSpace {
             }
         }
         
+        // Now time steps each matter object.
+        for (int i = 0; i<activeMatter.size(); i++){
+            activeMatter.get(i).timeStep(timeIncrement);
+        }
+        
         // Then acts all forces upon each matter object.
         actAll();
         
@@ -210,7 +215,7 @@ public class ObjectSpace {
             torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
         }
         a.addVelocity(Vector.multiply(forceVec, timeIncrement));
-        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement).getComp());
+        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
     }
     
     // Acts the relevant two argument forces upon the argument matter object.  
@@ -229,7 +234,7 @@ public class ObjectSpace {
             torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
         }
         a.addVelocity(Vector.multiply(forceVec, timeIncrement));
-        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement).getComp());
+        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
     }
     
     // Acts all forces upon each matter object in the object space.
