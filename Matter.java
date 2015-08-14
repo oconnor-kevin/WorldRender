@@ -431,6 +431,30 @@ public class Matter {
         return "r: " + originPosition.printVector() + "  v: " + originVelocity.printVector() + "  w: " + rotationalVelocity.printVector();
     }
     
+    // Prints the unchanging properties which describe the matter object.
+    public String printMatterProperties(){
+        // Initialize output string.
+        String s = "";
+        
+        // Appending fields.
+        s += "Mass Equivalents \n";
+        for (int i = 0; i<massEquivalentValues.size(); i++){
+            s += "     " + massEquivalentValues.keySet().toArray()[i] + ": " + massEquivalentValues.get(massEquivalentValues.keySet().toArray()[i]) + "\n";
+        }
+        s += "Centers of Mass Equivalents \n";
+        for (int i = 0; i<centersOfMassEquivalents.size(); i++){
+            s += "     " + centersOfMassEquivalents.keySet().toArray()[i] + ": " + centersOfMassEquivalents.get(centersOfMassEquivalents.keySet().toArray()[i]).printVector() + "\n";
+        }
+        s += "Fixed: " + fixed + "\n";
+        s += "Color: " + matterColor + "\n";
+        s += "Particles \n";
+        for (int i = 0; i<particles.size(); i++){
+            s += "     " + particles.get(i).printParticle() + particles.get(i).getMassEquivalentValues().toString() + "\n";
+        }
+        
+        return s;
+    }
+    
 }
 
 

@@ -68,4 +68,9 @@ public abstract class Force {
     //  object a according to the force it currently feels.  
     public abstract Vector interact(Matter a);
     
+    // Print method for outputting a String which lists the fields of the force.
+    public String printForce(){
+        return "Coefficient: " + coefficient + "     Mass Equivalent: " + massEquivalent;
+    }
+    
 }

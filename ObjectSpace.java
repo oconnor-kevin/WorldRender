@@ -274,8 +274,40 @@ public class ObjectSpace {
     }
     
     // Prints a String representation of the object space for purposes of 
-    //  writing file data.
-    //public String printObjectSpace(){}
+    //  writing file data.  Does not include all properties.  This method is 
+    //  meant for repetitive printing.  I.e. only fields which change over time
+    //  will be printed.
+    public String printObjectSpaceState(){
+        // Output begins with the current time of the space.
+        String s = time + "\n";
+        
+        // Appending each Matter object in the space to the string.
+        for (int i = 0; i<activeMatter.size(); i++){
+            s += "     " + activeMatter.get(i).printMatterState() + "\n";
+        }
+        
+        return s;
+    }
+    
+    // Prints a String representation of the contents and permanent properties
+    //  of the object space.
+    public String printObjectSpaceProperties(){
+        // Initialize output string.
+        String s = "";
+        
+        // Append immutable fields.
+        s += "Time Increment: " + timeIncrement;
+        for (int i = 0; i<activeForces.size(); i++){
+            s += activeForces.get(i) + "     " + activeForces.get(i).printForce() + "\n";
+        }
+        
+        // Appending each matter object.
+        for (int i = 0; i<activeMatter.size(); i++){
+            s += "     " + activeMatter.get(i) + "     " + activeMatter.get(i).printMatterProperties() + "\n";
+        }
+        
+        return s;
+    }
     
     
 }
