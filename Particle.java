@@ -137,7 +137,7 @@ public class Particle {
     // This method returns a string which describes the position and velocity
     //  of the particle, p.  
     public static String printParticle(Particle p){
-        return p.getPosition().printVector() + p.getVelocity().printVector();
+        return "r: " + p.getPosition().printVector() + "  v: " + p.getVelocity().printVector();
     }
     
     // This method calls printParticle for the active particle.

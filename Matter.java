@@ -97,6 +97,9 @@ public class Matter {
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
+        
+        // Adds moment of inertia to the mass equivalent values field.
+        calcMomIn();
     }
     
     public Matter(ArrayList<Particle> parts, Vector pos, Vector vel){
@@ -109,6 +112,9 @@ public class Matter {
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = true;
+        
+        // Adds moment of inertia to the mass equivalent values field.
+        calcMomIn();
     }
     
     public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Boolean fix){
@@ -121,6 +127,9 @@ public class Matter {
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
+        
+        // Adds moment of inertia to the mass equivalent values field.
+        calcMomIn();
     }
     
     public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix){
@@ -133,6 +142,9 @@ public class Matter {
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
         fixed = fix;
+        
+        // Adds moment of inertia to the mass equivalent values field.
+        calcMomIn();
     }
     
     public Matter(ArrayList<Particle> parts, Vector pos, Vector vel, Vector rot, Boolean fix, HashMap centers, HashMap values, Vector rotOri, Color col){
@@ -145,6 +157,9 @@ public class Matter {
         massEquivalentValues = values;
         matterColor = col;
         fixed = fix;
+        
+        // Adds moment of inertia to the mass equivalent values field.
+        calcMomIn();
     }
     
 //------------------------------------------------------------------------------    
@@ -366,7 +381,26 @@ public class Matter {
     
     // Calculates the moment of inertia of the object and adds it to the mass
     //  equivalents field.
-    public void calcMomIn(){}
+    public void calcMomIn(){
+        Vector CM = centersOfMassEquivalents.get("Mass"); // Center of mass
+        double moment = 0.0; // What will be saved as moment of inertia
+        double mass = 0.0; // Temporary variable for the mass of the particle
+        Vector rad = new Vector(3); // Vector from CM to particle
+        
+        // Looping through all particles in the matter object.
+        for (int i = 0; i<particles.size(); i++){
+            mass = (double) particles.get(i).getMassEquivalentValues().get("Mass");
+            rad = Vector.subtract(particles.get(i).getPosition(), CM);
+            moment += mass*rad.getMag()*rad.getMag();
+        }
+        
+        // Removes moment of inertia from the mass equivalents field if it 
+        //  already exists there.
+        removeMEqVal("Moment of Inertia");
+        
+        // Adding moment of inertia to the mass equivalents field.
+        addMEqVal("Moment of Inertia", moment);
+    }
     
 //------------------------------------------------------------------------------
 // Methods
@@ -389,6 +423,12 @@ public class Matter {
             total += (double) particles.get(i).getMassEquivalentValues().get(massEq);
         }
         return total;
+    }
+    
+    // Prints the originPosition, originVelocity, and rotationalVelocity of the
+    //  matter object.
+    public String printMatterState(){
+        return "r: " + originPosition.printVector() + "  v: " + originVelocity.printVector() + "  w: " + rotationalVelocity.printVector();
     }
     
 }
