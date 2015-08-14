@@ -242,6 +242,18 @@ public class Vector {
 		return new Vector(a);
         }
         
+        // Returns a vector object with the components of the argument vector
+        //  made positive.
+        public static Vector makePos(Vector v){
+            Vector newVec = v;
+            for (int i = 0; i<newVec.getComp().length; i++){
+                if (newVec.getComp()[i] < 0.0){
+                    newVec.set(i, newVec.getComp()[i]*(-1.0));
+                }
+            }
+            return newVec;
+        }
+        
         // Returns the dot product between the current Vector object and the 
         //  Vector v.
         public double dot(Vector v){

@@ -48,7 +48,6 @@ public class ObjectSpace {
     
     // A list of the active forces in the object space.
     private ArrayList<Force> activeForces;
-    
 
 //------------------------------------------------------------------------------    
 // Constructors
@@ -56,6 +55,7 @@ public class ObjectSpace {
         activeMatter = new ArrayList<>();
         timeIncrement = 1.0;
         time = 0.0;
+        activeForces = new ArrayList<>();
     }
     
     public ObjectSpace(ArrayList<Matter> mat, double inc, double ti, ArrayList<Force> fo){
@@ -136,23 +136,111 @@ public class ObjectSpace {
     }
     
     // Time steps the object space by the time increment field.
-    public void timeStep(){}
+    public void timeStep(){
+        // ArrayList of 2-element Matter arrays to save collisions.
+        ArrayList<Matter[]> collisions = new ArrayList<Matter[]>();
+        
+        // Set the coefficient of restitution for collisions.
+        double coefRest = 0.5;
+        
+        // Checks for collisions between all active matter objects.  When a 
+        //  collision is expected, the two objects are sent through the collide
+        //  method.
+        for (int i = 0; i<activeMatter.size(); i++){
+            for (int j = i; j<activeMatter.size(); j++){
+                if (collisionCheck(activeMatter.get(i), activeMatter.get(j))){
+                    collide(activeMatter.get(i), activeMatter.get(j), coefRest);
+                    collisions.add(new Matter[]{activeMatter.get(i), activeMatter.get(j)});
+                }
+            }
+        }
+        
+        // Then acts all forces upon each matter object.
+        actAll();
+        
+        // Increments the time.
+        incTime();
+        
+        // Appends the object space and collisions to the output file.
+        // STATEMENTS //
+    }
     
     // Alters velocity and rotational velocity of two Matter objects as if 
-    //  collided.  Takes a third boolean argument indicating whether the 
-    //  collision can be considered elastic.
-    public void collide(Matter a, Matter b, boolean elastic){}
+    //  collided.  Takes a third double argument indicating the coefficient of
+    //  restitution.  A coefficient of 0 corresponds to a perfectly inelastic 
+    //  collision while a coefficient of 1 corresponds to a perfectly elastic
+    //  collision.
+    public void collide(Matter a, Matter b, double coef){
+        // Getting a and b masses.
+        double aMass = (double) a.getMEqVal().get("Mass");
+        double bMass = (double) b.getMEqVal().get("Mass");
+        
+        // Getting initial momentum vectors.
+        Vector aInitMom = Vector.multiply(a.getOriginVelocity(), aMass);
+        Vector bInitMom = Vector.multiply(b.getOriginVelocity(), bMass);
+        Vector totalMom = Vector.add(aInitMom, bInitMom);
+        
+        // Calculating difference in initial velocities and multiplying by the
+        //  coefficient of restitution.
+        Vector velDiff = Vector.subtract(b.getOriginVelocity(), a.getOriginVelocity());
+        velDiff.multiply(coef);
+        
+        // Calculating final velocity vectors.
+        Vector aFinVel = Vector.multiply(Vector.add(totalMom, Vector.multiply(velDiff, bMass)), 1.0/(aMass + bMass));
+        velDiff.multiply(-1.0);
+        Vector bFinVel = Vector.multiply(Vector.add(totalMom, Vector.multiply(velDiff, aMass)), 1.0/(aMass + bMass));
+
+        // Setting final velocities of the matter objects.
+        a.setVelocity(aFinVel);
+        b.setVelocity(bFinVel);
+    }
     
     // Acts the relevant one argument forces upon the argument matter object.
-    public void actForces(Matter a){}
+    public void actForces(Matter a){
+        // Taking care of the change in velocity and rotational velocity in 
+        //  one loop.
+        Vector forceVec = new Vector(3);
+        Vector tempForceVec = new Vector(3); // temporarily stores a single force vector
+        Vector torqueVec = new Vector(3);
+        Vector rad = new Vector(3); // to store the distance from force to cm
+        for (int i = 0; i<activeForces.size(); i++){
+            tempForceVec = activeForces.get(i).interact(a);
+            forceVec = Vector.add(forceVec, tempForceVec);
+            rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
+            torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+        }
+        a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement).getComp());
+    }
     
     // Acts the relevant two argument forces upon the argument matter object.  
     //  Specifically, will alter the first argument's properties as a result of
     //  forces from the second object.
-    public void actForces(Matter a, Matter b){}
+    public void actForces(Matter a, Matter b){
+        Vector forceVec = new Vector(3);
+        Vector tempForceVec = new Vector(3);
+        Vector torqueVec = new Vector(3);
+        Vector torqueRad = new Vector(3);
+        Vector rad = new Vector(3);
+        for (int i = 0; i<activeForces.size(); i++){
+            tempForceVec = activeForces.get(i).interact(a, b);
+            forceVec = Vector.add(forceVec, tempForceVec);
+            rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
+            torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+        }
+        a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement).getComp());
+    }
     
     // Acts all forces upon each matter object in the object space.
-    public void actAll(){}
+    public void actAll(){
+        for (int i = 0; i<activeMatter.size(); i++){
+            for (int j = 0; j<activeMatter.size(); j++){
+                actForces(activeMatter.get(i), activeMatter.get(j));
+            }
+            actForces(activeMatter.get(i));
+        }
+    }
     
 
 //------------------------------------------------------------------------------
@@ -161,7 +249,24 @@ public class ObjectSpace {
     
     // Checks whether a collision is expected between the two argument matter
     //  objects in the next time step.
-    //public boolean collisionCheck(Matter a, Matter b){}
+    public boolean collisionCheck(Matter a, Matter b){
+        boolean willCollide = false;
+        // Checks whether the displacement vectors of the two matter objects
+        //  will intersect.
+        Vector dispA = Vector.multiply(a.getOriginVelocity(), timeIncrement);
+        Vector dispB = Vector.multiply(b.getOriginVelocity(), timeIncrement);
+        
+        // Checks for overlap in each dimension by checking if the total 
+        //  displacement is greater than the initial distance between the two.
+        Vector dist = Vector.subtract(a.getOriginPosition(), b.getOriginPosition());
+        Vector totDisp = Vector.add(Vector.makePos(dispA), Vector.makePos(dispB));
+        Vector compVec = Vector.subtract(dist, totDisp);
+        if (compVec.getComp()[0] <= 0.0 && compVec.getComp()[1] <= 0.0 && compVec.getComp()[2] <= 0.0){
+            willCollide = true;
+        }
+        
+        return willCollide;
+    }
     
     // Prints a String representation of the object space for purposes of 
     //  writing file data.
