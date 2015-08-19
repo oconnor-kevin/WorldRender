@@ -195,11 +195,12 @@ public class Vector {
         
     // Rotates the current vector object by dPhi in the phi direction.
     public void rotatePhi(double dPhi){
-        Vector newVec = new Vector(getComp().length);
-        newVec = rotatePhi(this, dPhi);
-        for (int i = 0; i<getComp().length; i++){
-            set(i, newVec.getComp()[i]);
-        }
+        double theta = getSphereComp()[1];
+        
+        // Perform rotations.
+        rotateTheta(-1.0*theta);
+        yRot(-1.0*dPhi);
+        rotateTheta(theta);
     }
        
     // Rotates the current vector object by dTheta in the theta direction.  This
@@ -208,8 +209,7 @@ public class Vector {
         zRot(-1.0*dTheta);
     }
         
-    // Rotates the current vector object by dTheta counter-clockwise about the 
-    //  x axis.
+    // Rotates the current vector object by dTheta clockwise about the x axis.
     public void xRot(double dTheta){
         Vector newVec = Matrix.multiply(Matrix.xRot(dTheta), this);
         for (int i = 0; i<3; i++){
@@ -217,8 +217,7 @@ public class Vector {
         }
     }
         
-    // Rotates the current vector object by dTheta counter-clockwise about the 
-    //  y axis.
+    // Rotates the current vector object by dTheta clockwise about the y axis.
     public void yRot(double dTheta){
         Vector newVec = Matrix.multiply(Matrix.yRot(dTheta), this);
         for (int i = 0; i<3; i++){
@@ -391,16 +390,16 @@ public class Vector {
 //  TESTING
         
     public static void main(String[] args){
-        Vector a = new Vector(1.0, 1.0, 0.0);
+        Vector a = new Vector(0.0, 1.0, 1.0);
         Vector b = new Vector(50, 20, 80);
         
         
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.zRot(0.5*Math.PI);
+        a.rotatePhi(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.zRot(0.5*Math.PI);
+        a.rotatePhi(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.zRot(0.5*Math.PI);
+        a.rotatePhi(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
         
 
