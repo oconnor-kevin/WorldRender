@@ -72,7 +72,16 @@ public class Vector {
     public Vector(double a, double b, double c){
         components = new double[]{a,b,c};
     }
+
+    // Creates a Vector object that is a clone of the argument Vector object.
+    public Vector(Vector v){
+        components = new double[v.getComp().length];
         
+        for (int i = 0; i<v.getComp().length; i++){
+            components[i] = v.getComp()[i];
+        }
+    }
+    
 //------------------------------------------------------------------------------        
 // Accessor Methods
     // Returns components field.  This is assumed to be in Cartesian coords.
@@ -235,17 +244,30 @@ public class Vector {
         
 //------------------------------------------------------------------------------        
 // Methods
-    // Returns the Vector sum of the two vectors, a and b.
+    // Returns the Vector sum of the two vectors, a and b.  If they have 
+    //  different dimensions, will print a message to the system and return a
+    //  zero vector.
     public static Vector add(Vector a, Vector b){
-    	double[] c = new double[a.getComp().length];
-	for (int i=0; i<a.getComp().length; i++){
-		c[i] = a.getComp()[i] + b.getComp()[i];
+        // Checks that the two vectors have the same dimensionality.
+        if (a.getComp().length == b.getComp().length){
+            double[] c = new double[a.getComp().length];
+            for (int i=0; i<a.getComp().length; i++){
+                c[i] = a.getComp()[i] + b.getComp()[i];
+            }
+            Vector d = new Vector(c);
+            return d;
         }
-        Vector d = new Vector(c);
-        return d;
+        
+        // Else prints a warning and returns a zero Vector.
+        else {
+            System.out.println("Vectors of different dimensions added.");
+            return null;
+        }
     }
         
-    // Returns the Vector difference of the two vectors, a and b.
+    // Returns the Vector difference of the two vectors, a and b.  If they have
+    //  different dimensions, will print a message to the system and return 
+    //  null.
     public static Vector subtract(Vector a, Vector b){
         return add(a, multiply(b, -1.0));
     }
@@ -258,34 +280,60 @@ public class Vector {
 	return v2;
     }
 	
-    // Returns the dot product of vectors a and b.
+    // Returns the dot product of vectors a and b.  If they have unequal 
+    //  dimensionality, prints message and returns 0.0.
     public static double dot(Vector a, Vector b){
-	double c = 0;
-	for (int i=0; i<a.getComp().length; i++){
+        // Check first to see that the two vectors have equal dimensionality.
+        if (a.getComp().length == b.getComp().length){
+            double c = 0;
+            for (int i=0; i<a.getComp().length; i++){
         	c += a.getComp()[i]*b.getComp()[i];
+            }
+            return c;
         }
-	return c;
+        
+        // If they have unequal dimensionality, print message and return 0.0.
+        else {
+            System.out.println("Attempted dot product operation between Vectors of unequal dimensionality.");
+            return 0.0;
+        }
     }
 	
     // Returns the cross product between vectors a and b.
     public static Vector cross(Vector a, Vector b){
-	double[] c = new double[3];
-	if (a.getComp().length == 3){
-            c[0] = a.getComp()[1]*b.getComp()[2] - a.getComp()[2]*b.getComp()[1];
-            c[1] = a.getComp()[2]*b.getComp()[0] - a.getComp()[0]*b.getComp()[2];
-            c[2] = a.getComp()[0]*b.getComp()[1] - a.getComp()[1]*b.getComp()[0];
+        // Check that dimensions of the two Vectors are equal.
+        if (a.getComp().length == b.getComp().length){
+            double[] c = new double[3];
+            if (a.getComp().length == 3){
+                c[0] = a.getComp()[1]*b.getComp()[2] - a.getComp()[2]*b.getComp()[1];
+                c[1] = a.getComp()[2]*b.getComp()[0] - a.getComp()[0]*b.getComp()[2];
+                c[2] = a.getComp()[0]*b.getComp()[1] - a.getComp()[1]*b.getComp()[0];
+            }
+            return new Vector(c);
         }
-        return new Vector(c);
+        
+        // If unequal, print message and return zero vector.
+        else {
+            System.out.println("Attempted cross product operation between Vectors of unequal dimensionality.");
+            return new Vector();
+        }
     }
 	
     // Returns the rectangular components of a vector which has its 
-    //  components in spherical components.
+    //  components in spherical components.  If the array has length other than
+    //  3, prints a message and returns a 3-dimensional zero vector.
     public static double[] getRectComp(double[] a){
 	double[] b = new double[3];
+        
+        // Checks length of the array.
 	if (a.length == 3){
             b[0] = a[0]*Math.sin(a[2])*Math.cos(a[1]);
             b[1] = a[0]*Math.sin(a[2])*Math.sin(a[1]);
             b[2] = a[0]*Math.cos(a[2]);
+        }
+        
+        else {
+            System.out.println("getRectComp operation attempted for array with length != 3.");
         }
 	return b;
     }
@@ -293,40 +341,48 @@ public class Vector {
     // Returns the vector corresponding to the vector v rotated in the phi
     //  direction by dPhi radians.  
     public static Vector rotatePhi(Vector v, double dPhi){
-	double[] a = v.getSphereComp();
-	if (v.getComp().length == 3){
-            a[2] += dPhi;
-            a = getRectComp(a);
-        }
-	return new Vector(a);
+	Vector newVec = new Vector(v);
+        newVec.rotatePhi(dPhi);
+        return newVec;
     }
 	
     // Returns the vector corresponding to the vector v rotated in the theta
     //  direction by dTheta radians.
     public static Vector rotateTheta(Vector v, double dTheta){
-	double[] a = v.getSphereComp();
-	if (v.getComp().length == 3){
-            a[1] += dTheta;
-            a = getRectComp(a);
-        }
-	return new Vector(a);
+	Vector newVec = new Vector(v);
+        newVec.rotateTheta(dTheta);
+        return newVec;
     }
 	
     // Returns the vector corresponding to the vector v with its magnitude
     //  increased by dRho.
     public static Vector increaseMagnitudeBy(Vector v, double dRho){
 	double[] a = v.getSphereComp();
+        
+        // Check that dimension of v is 3.
 	if (v.getComp().length == 3){
-            a[0] += dRho;
-            a = getRectComp(a);
+            if (a[0] + dRho >= 0.0){
+               a[0] += dRho;
+               a = getRectComp(a);
+               return new Vector(a);
+            }
+            else {
+                System.out.println("Negative radial component error.");
+                return null;
+            }
         }
-	return new Vector(a);
+        
+        // If dimension other than 3, print message and return null.
+        else {
+            System.out.println("increaseMagnitudeBy operation attempted on Vector with dimension other than 3.");
+            return null;
+        }
     }
         
     // Returns a vector object with the components of the argument vector
     //  made positive.
     public static Vector makePos(Vector v){
-        Vector newVec = v;
+        Vector newVec = new Vector(v);
         for (int i = 0; i<newVec.getComp().length; i++){
             if (newVec.getComp()[i] < 0.0){
                 newVec.set(i, newVec.getComp()[i]*(-1.0));
@@ -339,12 +395,20 @@ public class Vector {
     //  Vector v.
     public double dot(Vector v){
         double sum = 0.0;
+        
+        // Check that the two vectors have equal dimensionality.
         if (v.getComp().length == getComp().length){
             for (int i = 0; i<getComp().length; i++){
                 sum += v.getComp()[i]*getComp()[i];
             }
-        }
         return sum;
+        }
+        
+        // Otherwise print a message and return 0.0.
+        else {
+            System.out.println("Dot product operation attempted on Vectors with unequal dimensions.");
+            return 0.0;
+        }
     }
         
     // Returns a vector object equal to the cross product between the
@@ -352,12 +416,20 @@ public class Vector {
     //  are not both 3, returns zero vector.
     public Vector cross(Vector v){
         double[] c = new double[3];
+        
+        // Checks that vector dimensions are equal.
 	if (v.getComp().length == 3 && getComp().length == 3){
             c[0] = getComp()[1]*v.getComp()[2] - getComp()[2]*v.getComp()[1];
             c[1] = getComp()[2]*v.getComp()[0] - getComp()[0]*v.getComp()[2];
             c[2] = getComp()[0]*v.getComp()[1] - getComp()[1]*v.getComp()[0];
-        }
         return new Vector(c);
+        }
+        
+        // If unequal, prints warning message and returns null.
+        else {
+            System.out.println("Cross product operation attempted on Vectors with unequal dimensions.");
+            return null;
+        }
     }
         
     // Returns a formatted String with the components of the active Vector
@@ -376,34 +448,20 @@ public class Vector {
         
         
         
-	/* TODO:public static Vector rotatedBasis(Vector v, double[] b){}
+    /* TODO:public static Vector rotatedBasis(Vector v, double[] b){}
 	*/	
 	
-        /* TODO:public static double[] eigenValues(Vector v)
+    /* TODO:public static double[] eigenValues(Vector v)
         */
         
-        /* TODO:public static ArrayList<Vector> eigenVectors(Vector v)
+    /* TODO:public static ArrayList<Vector> eigenVectors(Vector v)
         */
         
 		
 //==============================================================================
 //  TESTING
         
-    public static void main(String[] args){
-        Vector a = new Vector(0.0, 1.0, 1.0);
-        Vector b = new Vector(50, 20, 80);
-        
-        
-        System.out.println(Arrays.toString(a.getSphereComp()));
-        a.rotatePhi(0.5*Math.PI);
-        System.out.println(Arrays.toString(a.getSphereComp()));
-        a.rotatePhi(0.5*Math.PI);
-        System.out.println(Arrays.toString(a.getSphereComp()));
-        a.rotatePhi(0.5*Math.PI);
-        System.out.println(Arrays.toString(a.getSphereComp()));
-        
-
-    }
+//    public static void main(String[] args){}
         
 
 }
