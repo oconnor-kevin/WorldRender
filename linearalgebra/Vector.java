@@ -92,6 +92,7 @@ public class Vector {
     // Returns the components of the active vector object in spherical
     //  coordinates where the angles are given in radians.  If the vector object
     //  is not 3-dimensional, the Cartesian coordinates are returned instead.
+    //  Theta has a range of [0, 2Pi], Phi has a range of [0, Pi].
     public double[] getSphereComp(){
 	if (components.length == 3){
             double[] a = new double[3];
@@ -104,37 +105,31 @@ public class Vector {
             a[0] = getMag();
             
             // Setting theta.
-            a[1] = Math.atan(y/x);
-            
+            if ((Math.signum(x) >= 0.0) && (Math.signum(y) > 0.0)){
+                a[1] = Math.atan(y/x);
+            }
+            else if ((Math.signum(x) < 0.0) && (Math.signum(y) >= 0.0)){
+                a[1] = Math.PI + Math.atan(y/x);
+            }
+            else if ((Math.signum(x) < 0.0) && (Math.signum(y) < 0.0)){
+                a[1] = Math.PI + Math.atan(y/x);
+            }
+            else if ((Math.signum(x) >= 0.0) && (Math.signum(y) < 0.0)){
+                a[1] = 2.0*Math.PI + Math.atan(y/x);
+            }
+            else {
+                a[1] = 0.0;
+            }
+                
             // Setting phi.
-            a[2] = Math.atan(Math.pow(x*x + y*y, 0.5)/z);
-            
-            // Readjusting quadrants.
-            if ((x < 0.0) && (z > 0.0)){
-                a[1] += Math.PI;
-                if (a[1] > Math.PI){
-                    a[1] -= 2.0*Math.PI;
-                }
+            if (Math.signum(z) > 0.0){
+                a[2] = Math.atan(Math.pow(x*x + y*y, 0.5)/z);
             }
-            else if ((x > 0.0) && (z < 0.0)){
-                a[2] += Math.PI;
+            else if (Math.signum(z) < 0.0){
+                a[2] = Math.PI + Math.atan(Math.pow(x*x + y*y, 0.5)/z);
             }
-            else if ((x < 0.0) && (z < 0.0)){
-                a[1] += Math.PI;
-                if (y < 0.0){
-                    a[2] -= Math.PI;
-                }
-                else {
-                    a[2] += Math.PI;
-                }
-            }
-            
-            // Setting angles to within [-Pi, Pi].
-            if ((a[1] < -1.0*Math.PI) || (a[1] > Math.PI)){
-                a[1] = (a[1] - Math.signum(a[1])*2.0*Math.PI);
-            }
-            if ((a[2] < -1.0*Math.PI) || (a[2] > Math.PI)){
-                a[2] = (a[2] - Math.signum(a[2])*2.0*Math.PI);
+            else {
+                a[2] = 0.0;
             }
             
             return a;
@@ -159,6 +154,12 @@ public class Vector {
                 set(i, getComp()[i]+v.getComp()[i]);
             }
         }
+        
+        // Eventually, this method should throw an exception if the two vectors
+        //  do not have the same length.  
+        else {
+            System.out.println("Vectors of different dimensions added.");
+        }
     }
         
     // Subtracts the vector v from the current vector object.
@@ -167,6 +168,12 @@ public class Vector {
             for (int i = 0; i<v.getComp().length; i++){
                 set(i, getComp()[i] - v.getComp()[i]);
             }
+        }
+        
+        // Eventually, this method should throw an exception if the two vectors
+        //  do not have the same length.  
+        else {
+            System.out.println("Vectors of different dimensions subtracted.");
         }
     }
         
@@ -195,16 +202,14 @@ public class Vector {
         }
     }
        
-    // Rotates the current vector object by dTheta in the theta direction.
+    // Rotates the current vector object by dTheta in the theta direction.  This
+    //  corresponds simply to a counter-clockwise rotation about the z-axis.
     public void rotateTheta(double dTheta){
-        Vector newVec = new Vector(getComp().length);
-        newVec = rotateTheta(this, dTheta);
-        for (int i = 0; i<getComp().length; i++){
-            set(i, newVec.getComp()[i]);
-        }
+        zRot(-1.0*dTheta);
     }
         
-    // Rotates the current vector object by dTheta about the x axis.
+    // Rotates the current vector object by dTheta counter-clockwise about the 
+    //  x axis.
     public void xRot(double dTheta){
         Vector newVec = Matrix.multiply(Matrix.xRot(dTheta), this);
         for (int i = 0; i<3; i++){
@@ -212,7 +217,8 @@ public class Vector {
         }
     }
         
-    // Rotates the current vector object by dTheta about the y axis.
+    // Rotates the current vector object by dTheta counter-clockwise about the 
+    //  y axis.
     public void yRot(double dTheta){
         Vector newVec = Matrix.multiply(Matrix.yRot(dTheta), this);
         for (int i = 0; i<3; i++){
@@ -220,7 +226,7 @@ public class Vector {
         }
     }
         
-    // Rotates the current vector object by dTheta about the z axis.
+    // Rotates the current vector object by dTheta clockwise about the z axis.
     public void zRot(double dTheta){
         Vector newVec = Matrix.multiply(Matrix.zRot(dTheta), this);
         for (int i = 0; i<3; i++){
@@ -385,11 +391,20 @@ public class Vector {
 //  TESTING
         
     public static void main(String[] args){
-        Vector a = new Vector(100, 100, 100);
+        Vector a = new Vector(1.0, -1.0, 1.0);
+        Vector b = new Vector(50, 20, 80);
         
-        System.out.println(a.getMag());
-        
-        
+        System.out.println(Arrays.toString(a.getSphereComp()));
+        System.out.println(Math.signum(a.getComp()[1]));
+        /*
+        System.out.println(Arrays.toString(a.getSphereComp()));
+        a.xRot(0.5*Math.PI);
+        System.out.println(Arrays.toString(a.getSphereComp()));
+        a.xRot(0.5*Math.PI);
+        System.out.println(Arrays.toString(a.getSphereComp()));
+        a.xRot(0.5*Math.PI);
+        System.out.println(Arrays.toString(a.getSphereComp()));
+        */
 
     }
         
