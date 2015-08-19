@@ -129,7 +129,7 @@ public class Vector {
                 a[2] = Math.PI + Math.atan(Math.pow(x*x + y*y, 0.5)/z);
             }
             else {
-                a[2] = 0.0;
+                a[2] = 0.5*Math.PI;
             }
             
             return a;
@@ -391,20 +391,18 @@ public class Vector {
 //  TESTING
         
     public static void main(String[] args){
-        Vector a = new Vector(1.0, -1.0, 1.0);
+        Vector a = new Vector(1.0, 1.0, 0.0);
         Vector b = new Vector(50, 20, 80);
         
+        
         System.out.println(Arrays.toString(a.getSphereComp()));
-        System.out.println(Math.signum(a.getComp()[1]));
-        /*
+        a.zRot(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.xRot(0.5*Math.PI);
+        a.zRot(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.xRot(0.5*Math.PI);
+        a.zRot(0.5*Math.PI);
         System.out.println(Arrays.toString(a.getSphereComp()));
-        a.xRot(0.5*Math.PI);
-        System.out.println(Arrays.toString(a.getSphereComp()));
-        */
+        
 
     }
         
