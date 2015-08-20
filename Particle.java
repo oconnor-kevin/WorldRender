@@ -29,6 +29,7 @@
 */
 
 
+import java.util.Arrays;
 import linearalgebra.*;
 import java.util.HashMap;
 
@@ -50,19 +51,31 @@ public class Particle {
     
     // Creates a particle with pos set as its position field, vel set as its 
     //  velocity field, and an empty hashmap set as its massEquivalentValues
-    //  field.  
+    //  field.  If pos and vel are not 3-dimensional, calls Particle().
     public Particle(Vector pos, Vector vel){
-        position = pos;
-        velocity = vel;
-        massEquivalentValues = new HashMap();
+        if (pos.getComp().length == 3 && vel.getComp().length == 3){
+            position = pos;
+            velocity = vel;
+            massEquivalentValues = new HashMap();
+        }
+        else {
+            System.out.println("At least one vector argument in Particle constructor is not 3-dimensional.");
+            new Particle();
+        }
     }
     
     // Creates a particle with pos set as its position field, vel set as its
     //  velocity field, and massEq set as its massEquivalentValues. 
     public Particle(Vector pos, Vector vel, HashMap<String, Double> massEq){
-        position = pos;
-        velocity = vel;
-        massEquivalentValues = massEq;
+        if (pos.getComp().length == 3 && vel.getComp().length == 3){
+            position = pos;
+            velocity = vel;
+            massEquivalentValues = massEq;
+        }
+        else {
+            System.out.println("At least one vector argument in Particle constructor is not 3-dimensional.");
+            new Particle();
+        }
     }
 
 //------------------------------------------------------------------------------
@@ -84,14 +97,27 @@ public class Particle {
     
 //------------------------------------------------------------------------------    
 // Mutator Methods
-    // Sets the position field to the argument newPosition.
+    // Sets the position field to the argument newPosition.  if newPosition is 
+    //  not 3-dimensional, sets position to null.
     public void setPosition(Vector newPosition){
-        position = newPosition;
+        if (newPosition.getComp().length == 3){
+            position = newPosition;
+        }
+        else {
+            System.out.println("Non 3-dimensional Vector argument for setPosition method.");
+            position = null;
+        }
     }
     
     // Sets the velocity field to the argument newVelocity.
     public void setVelocity(Vector newVelocity){
-        velocity = newVelocity;
+        if (newVelocity.getComp().length == 3){    
+            velocity = newVelocity;
+        }
+        else {
+            System.out.println("Non 3-dimensional Vector argument for setVelocity method.");
+            velocity = null;
+        }
     }
     
     // Adds the mass equivalent me and value val to the massEquivalentValues
@@ -101,7 +127,7 @@ public class Particle {
     }
     
     // Removes the mass equivalent me and value val from the 
-    //  massEquivalentValues hashmap.
+    //  massEquivalentValues hashmap if it is contained.
     public void removeMassEquivalentValue(String me){
         massEquivalentValues.remove(me);
     }
@@ -111,18 +137,17 @@ public class Particle {
         setPosition(Vector.add(getPosition(), disp));
     }
     
-    // Rotates the position of the particle around an axis defined by the 
-    //  Vector argument, axis.
+    // Rotates the position of the particle clockwise around an axis defined by 
+    //  the Vector argument, axis.
     public void rotateAroundAxis(Vector axis, double ang){
         Vector sphereComp = new Vector(axis.getSphereComp());
         double theta = sphereComp.getComp()[1];
         double phi = sphereComp.getComp()[2];
-        setPosition(Vector.rotateTheta(getPosition(), -theta));
-        setPosition(Vector.rotatePhi(getPosition(), -phi));
-        setPosition(Vector.rotatePhi(getPosition(), ang));
-        setPosition(Vector.rotatePhi(getPosition(), phi));
-        setPosition(Vector.rotateTheta(getPosition(), theta));
-        setPosition(new Vector(Vector.getRectComp(getPosition().getComp())));
+        getPosition().zRot(theta);
+        getPosition().yRot(phi);
+        getPosition().zRot(ang);
+        getPosition().yRot(-1.0*phi);
+        getPosition().zRot(-1.0*theta);
     }
     
     // Adds the vector dVel to the velocity field of the particle.
@@ -137,7 +162,7 @@ public class Particle {
     // This method returns a string which describes the position and velocity
     //  of the particle, p.  
     public static String printParticle(Particle p){
-        return "r: " + p.getPosition().printVector() + "  v: " + p.getVelocity().printVector();
+        return "r: " + p.getPosition().printVector() + "  v: " + p.getVelocity().printVector() + "  M.E.: " + p.getMassEquivalentValues();
     }
     
     // This method calls printParticle for the active particle.
@@ -145,5 +170,18 @@ public class Particle {
         return printParticle(this);
     }
 
+    
+//==============================================================================
+// TESTING
+    
+    public static void main(String[] args){
+        Particle a = new Particle(new Vector(0.0,0.0,1.0), new Vector(4.0,5.0,6.0), new HashMap<String, Double>());
+        
+        System.out.println(a.printParticle());
+        a.rotateAroundAxis(new Vector(1.0, 1.0, 1.0), (2.0/3.0)*Math.PI);
+        System.out.println(a.printParticle());
+        a.rotateAroundAxis(new Vector(1.0, 1.0, 1.0), (2.0/3.0)*Math.PI);
+        System.out.println(a.printParticle());
+    }
     
 }
