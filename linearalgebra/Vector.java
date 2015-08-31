@@ -242,6 +242,19 @@ public class Vector {
         }
     }
         
+    // Rotates the vector clockwise around an axis defined by the Vector 
+    //  argument, axis.
+    public void rotateAroundAxis(Vector axis, double ang){
+        Vector sphereComp = new Vector(axis.getSphereComp());
+        double theta = sphereComp.getComp()[1];
+        double phi = sphereComp.getComp()[2];
+        zRot(theta);
+        yRot(phi);
+        zRot(ang);
+        yRot(-1.0*phi);
+        zRot(-1.0*theta);
+    }
+    
 //------------------------------------------------------------------------------        
 // Methods
     // Returns the Vector sum of the two vectors, a and b.  If they have 
@@ -445,11 +458,14 @@ public class Vector {
         st += ")";
         return st;
     }
-        
-        
-        
-    /* TODO:public static Vector rotatedBasis(Vector v, double[] b){}
-	*/	
+            
+    // Returns a vector in the same direction as the argument vec and with the 
+    //  magnitude mag.
+    public static Vector assignMag(Vector vec, double mag){
+        Vector vec2 = multiply(vec, 1.0/vec.getMag());
+        vec2.multiply(mag);
+        return vec2;
+    }
 	
     /* TODO:public static double[] eigenValues(Vector v)
         */
@@ -461,7 +477,20 @@ public class Vector {
 //==============================================================================
 //  TESTING
         
-//    public static void main(String[] args){}
+    public static void main(String[] args){
+        Vector vec = new Vector(1.0, 0.0, 0.0);
+        
+        System.out.println(vec.printVector());
+        
+        vec.rotateAroundAxis(new Vector(0.0, 1.0, 0.0), Math.PI/2.0);
+        System.out.println(vec.printVector());
+        
+        vec.rotateAroundAxis(new Vector(0.0, 1.0, 0.0), Math.PI/2.0);
+        System.out.println(vec.printVector());
+        
+        vec.rotateAroundAxis(new Vector(0.0, 0.0, 1.0), Math.PI/2.0);
+        System.out.println(vec.printVector());
+    }
         
 
 }
