@@ -211,7 +211,7 @@ public class Matter {
     
     // Returns the center of the argument mass equivalent.
     public Vector getCenter(String massEq){
-        return centersOfMassEquivalents.get(massEq);
+        return centersOfMassEquivalents.getOrDefault(massEq, new Vector());
     }
     
     
@@ -296,7 +296,7 @@ public class Matter {
     
     // Adds the argument to the rotation of the matter object.
     public void addRotation(Vector dRot){
-        Vector.add(rotationalVelocity, dRot);
+        rotationalVelocity.add(dRot);
     }
     
     // Adds the argument String and vector pair to the list of centers of 
@@ -352,7 +352,7 @@ public class Matter {
     }
     
     // Rotates the matter object about its rotation origin according to the 
-    //  argument array where elements denote the number of radians which the 
+    //  argument Vector where elements denote the number of radians which the 
     //  object is to be rotated about the corresponding axis.
     public void rotate(Vector rot){
         // getting center of mass position in matter frame
@@ -362,34 +362,40 @@ public class Matter {
         //  each particle.
         for (int i = 0; i< particles.size(); i++){
             particles.get(i).displaceBy(Vector.multiply(cenMass, -1.0));
-            particles.get(i).rotateAroundAxis(new Vector(new double[]{1.0, 0.0, 0.0}), rot.getComp()[0]);
-            particles.get(i).rotateAroundAxis(new Vector(new double[]{0.0, 1.0, 0.0}), rot.getComp()[1]);
-            particles.get(i).rotateAroundAxis(new Vector(new double[]{0.0, 0.0, 1.0}), rot.getComp()[2]);
+            particles.get(i).rotateAroundAxis(rot, rot.getMag());
             particles.get(i).displaceBy(cenMass);
         }
     }
 
     // Steps the matter object forward in time, changing position based on 
     //  velocity and particle arrangement based on rotation.  Does not take
-    //  forces into account.
+    //  forces into account.  Assumes that there is no relative motion between
+    //  particles that comprise the matter object.
     public void timeStep(double time){
         if (!fixed){
+            // Moving matter object in the object space frame.
             displaceBy(Vector.multiply(originVelocity, time));
             rotate(Vector.multiply(rotationalVelocity, time));
+            
+            // Moving particles in the matter frame and rotating their 
+            //  velocities.
+            for (int i = 0; i<particles.size(); i++){
+                particles.get(i).timeStep(time);
+            }
         }
     }
     
     // Calculates the moment of inertia of the object and adds it to the mass
     //  equivalents field.
     public void calcMomIn(){
-        Vector CM = centersOfMassEquivalents.get("Mass"); // Center of mass
+        Vector CM = centersOfMassEquivalents.getOrDefault("Mass", new Vector()); // Center of mass
         double moment = 0.0; // What will be saved as moment of inertia
         double mass = 0.0; // Temporary variable for the mass of the particle
         Vector rad = new Vector(3); // Vector from CM to particle
         
         // Looping through all particles in the matter object.
         for (int i = 0; i<particles.size(); i++){
-            mass = (double) particles.get(i).getMassEquivalentValues().get("Mass");
+            mass = (double) particles.get(i).getMassEquivalentValues().getOrDefault("Mass", 0.0);
             rad = Vector.subtract(particles.get(i).getPosition(), CM);
             moment += mass*rad.getMag()*rad.getMag();
         }
@@ -420,7 +426,7 @@ public class Matter {
     public double calculateME(String massEq){
         double total = 0.0;
         for (int i = 0; i<particles.size(); i++){
-            total += (double) particles.get(i).getMassEquivalentValues().get(massEq);
+            total += (double) particles.get(i).getMassEquivalentValues().getOrDefault(massEq, 0.0);
         }
         return total;
     }
@@ -438,13 +444,15 @@ public class Matter {
         
         // Appending fields.
         s += "Mass Equivalents \n";
-        for (int i = 0; i<massEquivalentValues.size(); i++){
+        s += massEquivalentValues + "\n";
+        /* for (int i = 0; i<massEquivalentValues.size(); i++){
             s += "     " + massEquivalentValues.keySet().toArray()[i] + ": " + massEquivalentValues.get(massEquivalentValues.keySet().toArray()[i]) + "\n";
-        }
+        } */
         s += "Centers of Mass Equivalents \n";
         for (int i = 0; i<centersOfMassEquivalents.size(); i++){
             s += "     " + centersOfMassEquivalents.keySet().toArray()[i] + ": " + centersOfMassEquivalents.get(centersOfMassEquivalents.keySet().toArray()[i]).printVector() + "\n";
-        }
+        } 
+        
         s += "Fixed: " + fixed + "\n";
         s += "Color: " + matterColor + "\n";
         s += "Particles \n";
@@ -454,6 +462,68 @@ public class Matter {
         
         return s;
     }
+    
+////////////////////////////////////////////////////////////////////////////////
+// TESTING
+    
+    public static void main(String[] args){
+        
+        Particle partA = new Particle(new Vector(1.0, 1.0, 1.0), new Vector(1.0, 1000.0, 0.0));
+        Particle partB = new Particle(new Vector(-1.0, -1.0, -1.0), new Vector(3));
+        Particle partC = new Particle(new Vector(-1.0, 1.0, 1.0), new Vector(3));
+        Particle partD = new Particle(new Vector(1.0, -1.0, 1.0), new Vector(3));
+        Particle partE = new Particle(new Vector(1.0, 1.0, -1.0), new Vector(3));
+        Particle partF = new Particle(new Vector(-1.0, -1.0, 1.0), new Vector(3));
+        Particle partG = new Particle(new Vector(1.0, -1.0, -1.0), new Vector(3));
+        Particle partH = new Particle(new Vector(-1.0, 1.0, -1.0), new Vector(3));
+        
+        
+        partA.addMassEquivalentValue("Mass", 15.0);
+        partB.addMassEquivalentValue("Mass", 15.0);
+        partC.addMassEquivalentValue("Mass", 15.0);
+        partD.addMassEquivalentValue("Mass", 15.0);
+        partE.addMassEquivalentValue("Mass", 15.0);
+        partF.addMassEquivalentValue("Mass", 15.0);
+        partG.addMassEquivalentValue("Mass", 15.0);
+        partH.addMassEquivalentValue("Mass", 15.0);
+        
+        partA.addMassEquivalentValue("Charge", 50.0);
+        partB.addMassEquivalentValue("Charge", 50.0);
+        partC.addMassEquivalentValue("Charge", 50.0);
+        partD.addMassEquivalentValue("Charge", 50.0);
+        partE.addMassEquivalentValue("Charge", 50.0);
+        partF.addMassEquivalentValue("Charge", 50.0);
+        partG.addMassEquivalentValue("Charge", 50.0);
+        partH.addMassEquivalentValue("Charge", 100.0);
+        
+        Matter Mat1 = new Matter();
+        
+        Mat1.addParticle(partA);
+        Mat1.addParticle(partB);
+        Mat1.addParticle(partC);
+        Mat1.addParticle(partD);
+        Mat1.addParticle(partE);
+        Mat1.addParticle(partF);
+        Mat1.addParticle(partG);
+        Mat1.addParticle(partH);
+        
+        Mat1.fillCenters();
+        Mat1.fillME();
+        Mat1.calcMomIn();
+
+        Mat1.setFix(false);
+        
+        Mat1.setVelocity(new Vector(5.0, 0.0, 0.0));
+        Mat1.setRotation(new Vector(Math.PI, 0.0, 0.0));
+        Mat1.setRotationOrigin(Mat1.getCenter("Mass"));
+        
+        for (int i = 0; i<50; i++){
+            System.out.println(Mat1.printMatterProperties());
+            System.out.println(Mat1.printMatterState());
+            Mat1.timeStep(1.0);
+        }    
+    }
+    
     
 }
 

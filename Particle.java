@@ -137,17 +137,28 @@ public class Particle {
         setPosition(Vector.add(getPosition(), disp));
     }
     
-    // Rotates the position of the particle clockwise around an axis defined by 
-    //  the Vector argument, axis.
+    // Rotates the position and velocity of the particle clockwise around an 
+    //  axis defined by the Vector argument, axis.
     public void rotateAroundAxis(Vector axis, double ang){
+        // Getting angular components of the axis.
         Vector sphereComp = new Vector(axis.getSphereComp());
         double theta = sphereComp.getComp()[1];
         double phi = sphereComp.getComp()[2];
-        getPosition().zRot(theta);
-        getPosition().yRot(phi);
-        getPosition().zRot(ang);
-        getPosition().yRot(-1.0*phi);
-        getPosition().zRot(-1.0*theta);
+        
+        // Creating Position-Velocity vector which will be rotated to find the 
+        //  new velocity.
+        Vector posVel = new Vector();
+        posVel = Vector.add(position, velocity);
+        
+        // Rotating the position+velocity vector.
+        posVel.rotateAroundAxis(axis, ang);
+        
+        // Rotating the position vector.
+        position.rotateAroundAxis(axis, ang);
+        
+        // Solving for velocity vector and setting it as velocity.
+        posVel.subtract(position);
+        setVelocity(posVel);
     }
     
     // Adds the vector dVel to the velocity field of the particle.
@@ -155,6 +166,11 @@ public class Particle {
         setVelocity(Vector.add(getVelocity(), dVel));
     }
     
+    // Changes the particle's position based on its velocity and the argument
+    //  time unit.
+    public void timeStep(double time){
+        displaceBy(Vector.multiply(velocity, time));
+    }
     
 //------------------------------------------------------------------------------    
 // Methods 
@@ -175,12 +191,12 @@ public class Particle {
 // TESTING
     
     public static void main(String[] args){
-        Particle a = new Particle(new Vector(0.0,0.0,1.0), new Vector(4.0,5.0,6.0), new HashMap<String, Double>());
+        Particle a = new Particle(new Vector(0.0,0.0,1.0), new Vector(-1.0,1.0,1.0), new HashMap<String, Double>());
         
         System.out.println(a.printParticle());
-        a.rotateAroundAxis(new Vector(1.0, 1.0, 1.0), (2.0/3.0)*Math.PI);
+        a.rotateAroundAxis(new Vector(1.0, 0.0, 0.0), 0.5*Math.PI);
         System.out.println(a.printParticle());
-        a.rotateAroundAxis(new Vector(1.0, 1.0, 1.0), (2.0/3.0)*Math.PI);
+        a.rotateAroundAxis(new Vector(1.0, 0.0, 0.0), 0.5*Math.PI);
         System.out.println(a.printParticle());
     }
     
