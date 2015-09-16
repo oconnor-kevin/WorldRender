@@ -466,6 +466,40 @@ public class Vector {
         vec2.multiply(mag);
         return vec2;
     }
+    
+    // Returns a boolean indicating whether or not the two argument vectors 
+    //  overlap.
+    public static boolean overlaps(Vector v1, Vector v2, Vector relPos){
+        boolean result = true;
+        
+        for (int i = 0; i<3; i++){
+            // If same sign for component
+            if (v1.getComp()[i]*v2.getComp()[i] > 0.0){
+                if (relPos.getComp()[i]*v2.getComp()[i] < 0.0){
+                    if (Math.abs(v2.getComp()[i]) < Math.abs(relPos.getComp()[i])){
+                        result = false;
+                        break;
+                    }
+                }
+                else {
+                    if (Math.abs(v1.getComp()[i]) < Math.abs(relPos.getComp()[i])){
+                        result = false;
+                        break;
+                    }
+                }
+            }
+            // Else if differently signed.
+            else {
+                if (Math.abs(v1.getComp()[i]) + Math.abs(v2.getComp()[i]) < relPos.getComp()[i]){
+                    result = false;
+                    break;
+                }
+            }
+        }
+        
+        
+        return result;
+    }
 	
     /* TODO:public static double[] eigenValues(Vector v)
         */
@@ -478,18 +512,12 @@ public class Vector {
 //  TESTING
         
     public static void main(String[] args){
-        Vector vec = new Vector(1.0, 0.0, 0.0);
+        Vector vec1 = new Vector(1.0, 1.0, 1.0);
+        Vector vec2 = new Vector(-2.0, -2.0, -2.0);
+        Vector vec3 = new Vector(1.0, 1.0, 1.0);
         
-        System.out.println(vec.printVector());
+        System.out.println(overlaps(vec1, vec2, vec3));
         
-        vec.rotateAroundAxis(new Vector(0.0, 1.0, 0.0), Math.PI/2.0);
-        System.out.println(vec.printVector());
-        
-        vec.rotateAroundAxis(new Vector(0.0, 1.0, 0.0), Math.PI/2.0);
-        System.out.println(vec.printVector());
-        
-        vec.rotateAroundAxis(new Vector(0.0, 0.0, 1.0), Math.PI/2.0);
-        System.out.println(vec.printVector());
     }
         
 
