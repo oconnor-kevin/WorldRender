@@ -84,7 +84,7 @@ public class Matter {
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
-        fixed = true;
+        fixed = false;
     }
     
     public Matter(ArrayList<Particle> parts){
@@ -96,7 +96,7 @@ public class Matter {
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
-        fixed = true;
+        fixed = false;
         
         // Adds moment of inertia to the mass equivalent values field.
         calcMomIn();
@@ -111,7 +111,7 @@ public class Matter {
         centersOfMassEquivalents = new HashMap();
         massEquivalentValues = new HashMap();
         matterColor = Color.BLACK;
-        fixed = true;
+        fixed = false;
         
         // Adds moment of inertia to the mass equivalent values field.
         calcMomIn();

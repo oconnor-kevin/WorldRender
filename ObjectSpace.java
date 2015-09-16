@@ -202,39 +202,47 @@ public class ObjectSpace {
     
     // Acts the relevant one argument forces upon the argument matter object.
     public void actForces(Matter a){
-        // Taking care of the change in velocity and rotational velocity in 
-        //  one loop.
-        Vector forceVec = new Vector(3);
-        Vector tempForceVec = new Vector(3); // temporarily stores a single force vector
-        Vector torqueVec = new Vector(3);
-        Vector rad = new Vector(3); // to store the distance from force to cm
-        for (int i = 0; i<activeForces.size(); i++){
-            tempForceVec = activeForces.get(i).interact(a);
-            forceVec = Vector.add(forceVec, tempForceVec);
-            rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
-            torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+        if (getForces().size() != 0){
+            // Taking care of the change in velocity and rotational velocity in 
+            //  one loop.
+            Vector forceVec = new Vector(3);
+            Vector tempForceVec = new Vector(3); // temporarily stores a single force vector
+            Vector torqueVec = new Vector(3);
+            Vector rad = new Vector(3); // to store the distance from force to cm
+            for (int i = 0; i<activeForces.size(); i++){
+                tempForceVec = activeForces.get(i).interact(a);
+                forceVec = Vector.add(forceVec, tempForceVec);
+                rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
+                torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+            }
+            a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+            if ((double) a.getMEqVal().get("Moment of Inertia") != 0.0){
+                a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
+            }
         }
-        a.addVelocity(Vector.multiply(forceVec, timeIncrement));
-        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
     }
     
     // Acts the relevant two argument forces upon the argument matter object.  
     //  Specifically, will alter the first argument's properties as a result of
     //  forces from the second object.
     public void actForces(Matter a, Matter b){
-        Vector forceVec = new Vector(3);
-        Vector tempForceVec = new Vector(3);
-        Vector torqueVec = new Vector(3);
-        Vector torqueRad = new Vector(3);
-        Vector rad = new Vector(3);
-        for (int i = 0; i<activeForces.size(); i++){
-            tempForceVec = activeForces.get(i).interact(a, b);
-            forceVec = Vector.add(forceVec, tempForceVec);
-            rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
-            torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+        if (getForces().size() != 0){
+            Vector forceVec = new Vector(3);
+            Vector tempForceVec = new Vector(3);
+            Vector torqueVec = new Vector(3);
+            Vector torqueRad = new Vector(3);
+            Vector rad = new Vector(3);
+            for (int i = 0; i<activeForces.size(); i++){
+                tempForceVec = activeForces.get(i).interact(a, b);
+                forceVec = Vector.add(forceVec, tempForceVec);
+                rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
+                torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+            }
+            a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+            if ((double) a.getMEqVal().get("Moment of Inertia") != 0.0){
+                a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
+            }
         }
-        a.addVelocity(Vector.multiply(forceVec, timeIncrement));
-        a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
     }
     
     // Acts all forces upon each matter object in the object space.
@@ -255,7 +263,11 @@ public class ObjectSpace {
     // Checks whether a collision is expected between the two argument matter
     //  objects in the next time step.
     public boolean collisionCheck(Matter a, Matter b){
+      /*
+        
         boolean willCollide = false;
+        
+      
         // Checks whether the displacement vectors of the two matter objects
         //  will intersect.
         Vector dispA = Vector.multiply(a.getOriginVelocity(), timeIncrement);
@@ -269,8 +281,13 @@ public class ObjectSpace {
         if (compVec.getComp()[0] <= 0.0 && compVec.getComp()[1] <= 0.0 && compVec.getComp()[2] <= 0.0){
             willCollide = true;
         }
+        */
         
-        return willCollide;
+        Vector relativePositions = Vector.subtract(b.getOriginPosition(), a.getOriginPosition());
+        return Vector.overlaps(Vector.multiply(a.getOriginVelocity(), timeIncrement), Vector.multiply(b.getOriginVelocity(), timeIncrement), relativePositions);
+                
+                
+        //return willCollide;
     }
     
     // Prints a String representation of the object space for purposes of 
@@ -307,6 +324,104 @@ public class ObjectSpace {
         }
         
         return s;
+    }
+    
+////////////////////////////////////////////////////////////////////////////////
+//  TESTING
+    
+    public static void main(String[] args){
+        
+        
+        Particle partA = new Particle(new Vector(1.0, 1.0, 1.0), new Vector(1.0, 0.0, 0.0));
+        Particle partB = new Particle(new Vector(-1.0, -1.0, -1.0), new Vector(3));
+        Particle partC = new Particle(new Vector(-1.0, 1.0, 1.0), new Vector(3));
+        Particle partD = new Particle(new Vector(1.0, -1.0, 1.0), new Vector(3));
+        Particle partE = new Particle(new Vector(1.0, 1.0, -1.0), new Vector(3));
+        Particle partF = new Particle(new Vector(-1.0, -1.0, 1.0), new Vector(3));
+        Particle partG = new Particle(new Vector(1.0, -1.0, -1.0), new Vector(3));
+        Particle partH = new Particle(new Vector(-1.0, 1.0, -1.0), new Vector(3));
+        
+        
+        partA.addMassEquivalentValue("Mass", 15.0);
+        partB.addMassEquivalentValue("Mass", 15.0);
+        partC.addMassEquivalentValue("Mass", 15.0);
+        partD.addMassEquivalentValue("Mass", 15.0);
+        partE.addMassEquivalentValue("Mass", 15.0);
+        partF.addMassEquivalentValue("Mass", 15.0);
+        partG.addMassEquivalentValue("Mass", 15.0);
+        partH.addMassEquivalentValue("Mass", 15.0);
+        
+        partA.addMassEquivalentValue("Charge", 50.0);
+        partB.addMassEquivalentValue("Charge", 50.0);
+        partC.addMassEquivalentValue("Charge", 50.0);
+        partD.addMassEquivalentValue("Charge", 50.0);
+        partE.addMassEquivalentValue("Charge", 50.0);
+        partF.addMassEquivalentValue("Charge", 50.0);
+        partG.addMassEquivalentValue("Charge", 50.0);
+        partH.addMassEquivalentValue("Charge", 100.0);
+        
+        Matter Mat1 = new Matter();
+        
+        Mat1.addParticle(partA);
+        Mat1.addParticle(partB);
+        Mat1.addParticle(partC);
+        Mat1.addParticle(partD);
+        Mat1.addParticle(partE);
+        Mat1.addParticle(partF);
+        Mat1.addParticle(partG);
+        Mat1.addParticle(partH);
+        
+        Mat1.fillCenters();
+        Mat1.fillME();
+        Mat1.calcMomIn();
+
+        Mat1.setFix(false);
+        
+        Mat1.setVelocity(new Vector(5.0, 0.0, 0.0));
+        Mat1.setRotation(new Vector(Math.PI, 0.0, 0.0));
+        Mat1.setRotationOrigin(Mat1.getCenter("Mass"));
+        
+        Matter matA = new Matter();
+        Matter matB = new Matter();
+        
+        Particle part1 = new Particle(new Vector(0.0, 0.0, 0.0), new Vector(1.0, 0.0, 0.0));
+        Particle part2 = new Particle(new Vector(5.0, 0.0, 0.0), new Vector(0.0, 0.0, 0.0));
+        
+        part1.addMassEquivalentValue("Mass", 10.0);
+        part2.addMassEquivalentValue("Mass", 1000.0);
+        
+        matA.addParticle(part1);
+        matB.addParticle(part2);
+        
+        matA.fillCenters();
+        matB.fillCenters();
+        
+        matA.fillME();
+        matB.fillME();
+        
+        matA.calcMomIn();
+        matB.calcMomIn();
+        
+        matA.setPosition(new Vector(0.0, 0.0, 0.0));
+        matB.setPosition(new Vector(10.0, 0.0, 0.0));
+        
+        matA.setVelocity(new Vector(1000.0, 0.0, 0.0));
+        matB.setVelocity(new Vector(0.0, 0.0, 0.0));
+        
+        ObjectSpace os = new ObjectSpace();
+        
+        os.addMatter(matA);
+        os.addMatter(matB);
+        
+        os.setTimeInc(0.31);
+        
+        System.out.println(os.printObjectSpaceProperties());
+        for (int i = 0; i < 50; i++){
+            System.out.println(os.printObjectSpaceState());
+            os.timeStep();
+        }
+        
+        
     }
     
     
