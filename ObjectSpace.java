@@ -31,6 +31,7 @@
 
 import linearalgebra.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class ObjectSpace {
 
@@ -215,7 +216,7 @@ public class ObjectSpace {
                 rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
                 torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
             }
-            a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+            a.addVelocity(Vector.multiply(Vector.multiply(forceVec, 1.0 / (double) a.getMEqVal().get("Mass")), timeIncrement));
             if ((double) a.getMEqVal().get("Moment of Inertia") != 0.0){
                 a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
             }
@@ -238,9 +239,9 @@ public class ObjectSpace {
                 rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
                 torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
             }
-            a.addVelocity(Vector.multiply(forceVec, timeIncrement));
+            a.addVelocity(Vector.multiply(Vector.multiply(forceVec, 1.0 / (double) a.getMEqVal().get("Mass")), timeIncrement));
             if ((double) a.getMEqVal().get("Moment of Inertia") != 0.0){
-                a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0/ ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
+                a.addRotation(Vector.multiply(Vector.multiply(torqueVec, 1.0 / ((double) a.getMEqVal().get("Moment of Inertia"))), timeIncrement));
             }
         }
     }
@@ -249,7 +250,9 @@ public class ObjectSpace {
     public void actAll(){
         for (int i = 0; i<activeMatter.size(); i++){
             for (int j = 0; j<activeMatter.size(); j++){
-                actForces(activeMatter.get(i), activeMatter.get(j));
+                if (i != j){
+                    actForces(activeMatter.get(i), activeMatter.get(j));
+                }
             }
             actForces(activeMatter.get(i));
         }
@@ -263,31 +266,8 @@ public class ObjectSpace {
     // Checks whether a collision is expected between the two argument matter
     //  objects in the next time step.
     public boolean collisionCheck(Matter a, Matter b){
-      /*
-        
-        boolean willCollide = false;
-        
-      
-        // Checks whether the displacement vectors of the two matter objects
-        //  will intersect.
-        Vector dispA = Vector.multiply(a.getOriginVelocity(), timeIncrement);
-        Vector dispB = Vector.multiply(b.getOriginVelocity(), timeIncrement);
-        
-        // Checks for overlap in each dimension by checking if the total 
-        //  displacement is greater than the initial distance between the two.
-        Vector dist = Vector.subtract(a.getOriginPosition(), b.getOriginPosition());
-        Vector totDisp = Vector.add(Vector.makePos(dispA), Vector.makePos(dispB));
-        Vector compVec = Vector.subtract(dist, totDisp);
-        if (compVec.getComp()[0] <= 0.0 && compVec.getComp()[1] <= 0.0 && compVec.getComp()[2] <= 0.0){
-            willCollide = true;
-        }
-        */
-        
         Vector relativePositions = Vector.subtract(b.getOriginPosition(), a.getOriginPosition());
         return Vector.overlaps(Vector.multiply(a.getOriginVelocity(), timeIncrement), Vector.multiply(b.getOriginVelocity(), timeIncrement), relativePositions);
-                
-                
-        //return willCollide;
     }
     
     // Prints a String representation of the object space for purposes of 
@@ -331,7 +311,7 @@ public class ObjectSpace {
     
     public static void main(String[] args){
         
-        
+       /* 
         Particle partA = new Particle(new Vector(1.0, 1.0, 1.0), new Vector(1.0, 0.0, 0.0));
         Particle partB = new Particle(new Vector(-1.0, -1.0, -1.0), new Vector(3));
         Particle partC = new Particle(new Vector(-1.0, 1.0, 1.0), new Vector(3));
@@ -384,11 +364,11 @@ public class ObjectSpace {
         Matter matA = new Matter();
         Matter matB = new Matter();
         
-        Particle part1 = new Particle(new Vector(0.0, 0.0, 0.0), new Vector(1.0, 0.0, 0.0));
-        Particle part2 = new Particle(new Vector(5.0, 0.0, 0.0), new Vector(0.0, 0.0, 0.0));
+        Particle part1 = new Particle(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 0.0));
+        Particle part2 = new Particle(new Vector(0.0, 0.0, 0.0), new Vector(0.0, 0.0, 0.0));
         
-        part1.addMassEquivalentValue("Mass", 10.0);
-        part2.addMassEquivalentValue("Mass", 1000.0);
+        part1.addMassEquivalentValue("Mass", 0.01);
+        part2.addMassEquivalentValue("Mass", 0.01);
         
         matA.addParticle(part1);
         matB.addParticle(part2);
@@ -405,16 +385,82 @@ public class ObjectSpace {
         matA.setPosition(new Vector(0.0, 0.0, 0.0));
         matB.setPosition(new Vector(10.0, 0.0, 0.0));
         
-        matA.setVelocity(new Vector(1000.0, 0.0, 0.0));
-        matB.setVelocity(new Vector(0.0, 0.0, 0.0));
+        matA.setVelocity(new Vector(0.0, 1.0, 0.0));
+        matB.setVelocity(new Vector(0.0, -1.0, 0.0));
         
         ObjectSpace os = new ObjectSpace();
+        os.addForce(new LinearForce(-9.8, "Mass", new Vector(0, 0, 1.0)));
+        os.addForce(new LinearForce(9.8, "Mass", new Vector(0, 0, 1.0)));
+        
+        os.addForce(new RadialForce(1000.0, "Mass"));
+        
         
         os.addMatter(matA);
         os.addMatter(matB);
         
-        os.setTimeInc(0.31);
+        os.setTimeInc(0.0031);
+               
+               */
         
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        // TESTING SINGLE MATTER OBJECT
+        
+        /*
+        // Single particle 
+        Particle part1 = new Particle(new Vector(3), new Vector(3));
+        part1.addMassEquivalentValue("Mass", 1.0);
+        part1.addMassEquivalentValue("Charge", 2.0);
+        
+        Matter mat1 = new Matter();
+        mat1.addParticle(part1);
+        mat1.setFix(false);
+        mat1.setPosition(new Vector(3));
+        mat1.setVelocity(new Vector(0.0, 0.0, 1.0));
+        mat1.setRotation(new Vector(1.0, 1.0, 1.0));
+        mat1.fillCenters();
+        mat1.fillME();
+        mat1.calcMomIn();
+        mat1.setRotationOrigin(mat1.getCenter("Mass"));
+        
+        ObjectSpace os = new ObjectSpace();
+        os.addMatter(mat1);
+        os.setTimeInc(0.01);
+        os.addForce(new LinearForce(100.0, "Mass", new Vector(1.0, 0.0, 0.0)));
+        os.addForce(new LinearForce(200.0, "Charge", new Vector(0.0, 1.0, 0.0)));
+        os.addForce(new DragForce(10.0)); 
+        */
+        
+        // Two particles
+        Particle part1 = new Particle(new Vector(-1.0, 0.0, 0.0), new Vector(3));
+        Particle part2 = new Particle(new Vector(1.0, 0.0, 0.0), new Vector(3));
+        part1.addMassEquivalentValue("Mass", 1.0);
+        part2.addMassEquivalentValue("Mass", 1.0);
+        part1.addMassEquivalentValue("Charge", 2.0);
+        part2.addMassEquivalentValue("Charge", -2.0);
+        
+        Matter mat1 = new Matter();
+        mat1.addParticle(part1);
+        mat1.addParticle(part2);
+        mat1.setFix(false);
+        mat1.setPosition(new Vector(3));
+        mat1.setVelocity(new Vector(0.0, 1.0, 1.0));
+        mat1.setRotation(new Vector(0.0, 0.0, 0.0));
+        mat1.fillCenters();
+        mat1.fillME();
+        mat1.calcMomIn();
+        mat1.setRotationOrigin(mat1.getCenter("Mass"));
+        
+        ObjectSpace os = new ObjectSpace();
+        os.addMatter(mat1);
+        os.setTimeInc(0.01);
+        os.addForce(new LinearForce(100.0, "Mass", new Vector(1.0, 0.0, 0.0)));
+        os.addForce(new LinearForce(-400.0, "Mass", new Vector(1.0, 0.0, 0.0)));
+        
+        
+        
+        
+        
+        // Output results
         System.out.println(os.printObjectSpaceProperties());
         for (int i = 0; i < 50; i++){
             System.out.println(os.printObjectSpaceState());

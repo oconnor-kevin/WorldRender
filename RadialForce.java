@@ -41,8 +41,9 @@ public class RadialForce extends Force{
     // Implements the two argument interact method.
     @Override
     public Vector interact(Matter a, Matter b){
-        Vector rad = Vector.subtract((Vector) b.getCentersOfMassEquivalents().get(super.massEquivalent), (Vector) a.getCentersOfMassEquivalents().get(super.massEquivalent));
-        double nume = super.coefficient * (double) a.getMEqVal().get(super.massEquivalent)* (double) b.getMEqVal().get(super.massEquivalent);
+        Vector rad = Vector.subtract(Vector.add(b.getOriginPosition(), (Vector) b.getCenter(massEquivalent)), Vector.add(a.getOriginPosition(), (Vector) a.getCenter(massEquivalent)));
+  //      System.out.println(rad.printVector());
+        double nume = coefficient * (double) a.getMEqVal().get(massEquivalent) * (double) b.getMEqVal().get(massEquivalent);
         Vector force = Vector.multiply(rad, 1.0/rad.getMag());
         return Vector.multiply(force, nume/(rad.getMag() * rad.getMag()));
     }

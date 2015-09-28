@@ -33,15 +33,21 @@ public class DragForce extends Force {
 // Constructor
     public DragForce(double coef){
         coefficient = coef;
+        massEquivalent = "Mass";
     }
     
 // Methods
     // Implements one argument interact method for a drag force.
     @Override
     public Vector interact(Matter a){
-        double mag = coefficient * Vector.dot(a.getOriginVelocity(), a.getOriginVelocity());
-        Vector dir = Vector.multiply(a.getOriginVelocity(), -1.0 * a.getOriginVelocity().getMag());
-        return Vector.multiply(dir, mag);
+        if (a.getOriginVelocity().getMag() != 0.0){
+            double mag = coefficient * Vector.dot(a.getOriginVelocity(), a.getOriginVelocity());
+            Vector dir = Vector.multiply(a.getOriginVelocity(), -1.0 / a.getOriginVelocity().getMag());
+            return Vector.multiply(dir, mag);
+        }
+        else {
+            return new Vector(3);
+        }
     }
     
     // Implements two argument interact method to make the class concrete.

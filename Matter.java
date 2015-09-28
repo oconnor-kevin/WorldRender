@@ -417,7 +417,7 @@ public class Matter {
         Vector mR = new Vector(new double[]{0.0, 0.0, 0.0});
         for (int i = 0; i< particles.size(); i++){
             mR = Vector.add(mR, Vector.multiply(particles.get(i).getPosition(), (double) particles.get(i).getMassEquivalentValues().get(massEq)));
-            total += (double) particles.get(i).getMassEquivalentValues().get(massEq);
+            total += Math.abs((double) particles.get(i).getMassEquivalentValues().get(massEq));
         }
         return Vector.multiply(mR, 1.0/total);
     }

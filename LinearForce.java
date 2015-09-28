@@ -34,9 +34,10 @@ public class LinearForce extends Force{
     Vector direction;
     
 // Constructors
-    public LinearForce(double coef, String me){
+    public LinearForce(double coef, String me, Vector dir){
         coefficient = coef;
         massEquivalent = me;
+        direction = dir;
     }
     
 // Methods
