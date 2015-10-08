@@ -28,6 +28,7 @@
  */
 
 import linearalgebra.*;
+import java.util.ArrayList;
 
 public class LinearForce extends Force{
 // Fields
@@ -51,5 +52,23 @@ public class LinearForce extends Force{
     @Override
     public Vector interact(Matter a, Matter b){
         return new Vector(new double[]{0.0, 0.0, 0.0});
+    }
+    
+    // Finds the resulting torque vector resulting from each particle in the 
+    //  matter object.
+    public Vector findTorque(Matter a){
+        ArrayList<Particle> particles = a.getParticles();
+        Vector totalTorque = new Vector(3);
+        
+        for (Particle p: particles){
+            double massEq = (double) p.getMassEquivalentValues().get(massEquivalent);
+            if (massEq != 0.0){
+                Vector force = Vector.multiply(direction, coefficient*massEq);
+                Vector radius = p.getPosition();
+                totalTorque.add(Vector.cross(radius, force));
+            }
+        }
+        
+        return totalTorque;
     }
 }

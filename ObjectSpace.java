@@ -213,8 +213,11 @@ public class ObjectSpace {
             for (int i = 0; i<activeForces.size(); i++){
                 tempForceVec = activeForces.get(i).interact(a);
                 forceVec = Vector.add(forceVec, tempForceVec);
+/*
                 rad = Vector.subtract(a.getCenter(activeForces.get(i).getME()), a.getCenter("Mass"));
                 torqueVec = Vector.add(torqueVec, Vector.cross(rad, tempForceVec));
+*/                
+                torqueVec = Vector.add(torqueVec, activeForces.get(i).findTorque(a));
             }
             a.addVelocity(Vector.multiply(Vector.multiply(forceVec, 1.0 / (double) a.getMEqVal().get("Mass")), timeIncrement));
             if ((double) a.getMEqVal().get("Moment of Inertia") != 0.0){
@@ -454,7 +457,7 @@ public class ObjectSpace {
         os.addMatter(mat1);
         os.setTimeInc(0.01);
         os.addForce(new LinearForce(100.0, "Mass", new Vector(1.0, 0.0, 0.0)));
-        os.addForce(new LinearForce(-400.0, "Mass", new Vector(1.0, 0.0, 0.0)));
+        os.addForce(new LinearForce(-400.0, "Charge", new Vector(0.0, 1.0, 0.0)));
         
         
         

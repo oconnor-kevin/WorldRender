@@ -53,6 +53,11 @@ public class DragForce extends Force {
     // Implements two argument interact method to make the class concrete.
     @Override 
     public Vector interact(Matter a, Matter b){
-        return new Vector(new double[]{0.0, 0.0, 0.0});
+        return new Vector(3);
+    }
+    
+    @Override
+    public Vector findTorque(Matter a){
+        return new Vector(3);
     }
 }

@@ -55,4 +55,10 @@ public class RadialForce extends Force{
     public Vector interact(Matter a){
         return new Vector(new double[]{0.0, 0.0, 0.0});
     }
+    
+    // TODO: implement findTorque method.
+    @Override
+    public Vector findTorque(Matter a){
+        return new Vector(3);
+    }
 }
