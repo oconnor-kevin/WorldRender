@@ -164,9 +164,8 @@ public class Matrix {
             mat.setElementAtIndex(1, 1, Math.cos(theta));
             return mat;
         }
-        
-// TODO: implement an invert method that works for all square matrices        
-        
+                
+        // Can only invert 2x2 matrices.
         public static Matrix invert(Matrix a){
             Matrix b = new Matrix(a.getElements().length, a.getElements()[0].length);
             if (a.getElements().length == a.getElements()[0].length && determinant(a) != 0.0){
@@ -195,6 +194,47 @@ public class Matrix {
                         sum += m.getElements()[i][j]*v.getComp()[j];}
                     v2.getComp()[i] = sum;}}
             return v2;}
+        
+        public void scalarRowMultiply(double d, int i){
+            Vector ithRow = new Vector(getElements()[i]);
+            ithRow.multiply(d);
+            for (int j = 0; j < getElements()[0].length; j++){
+                setElementAtIndex(i, j, ithRow.getComp()[j]);
+            }  
+        }
+        
+        public void rowAddition(int row, int addInd){
+            Vector rowVec = new Vector(getElements()[row]);
+            Vector addVec = new Vector(getElements()[addInd]);
+            
+            rowVec.add(addVec);
+            
+            for (int j = 0; j < getElements()[0].length; j++){
+                setElementAtIndex(row, j, rowVec.getComp()[j]);
+            }
+        }
+        
+        // Prints matrix.  Mostly for testing and verification.
+        public static void printMatrix(Matrix m){
+            for (int i = 0; i < m.getElements().length; i++){
+                for (int j = 0; j < m.getElements()[0].length; j++){
+                    System.out.print(m.getElements()[i][j] + "  ");
+                }
+                System.out.println();
+            }
+        }
+ 
+        // Testing
+        public static void main(String[] args){
+            Matrix m = new Matrix(new double[][]{{1,0,0},{0,1,0},{0,0,1}});
+            printMatrix(m);
+            m.scalarRowMultiply(4.0, 1);
+            System.out.println();
+            printMatrix(m);
+            System.out.println("\n\n\n\n");
+            m.rowAddition(0, 1);
+            printMatrix(m);
+            m = matrixMultiply(m, m);
+            printMatrix(m);
+        }   
 }
-
-
