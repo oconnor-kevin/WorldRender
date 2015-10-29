@@ -316,7 +316,7 @@ public class Matter {
         if (particles.size() > 0){
             for (int i = 0; i<particles.get(0).getMassEquivalentValues().keySet().size(); i++){
                 calcAndAddCenter((String) particles.get(0).getMassEquivalentValues().keySet().toArray()[i]);
-            }
+            } 
         }
     }
     
@@ -379,8 +379,8 @@ public class Matter {
             
             // Moving particles in the matter frame and rotating their 
             //  velocities.
-            for (int i = 0; i<particles.size(); i++){
-                particles.get(i).timeStep(time);
+            for (Particle p : particles){
+                p.timeStep(time);
             }
         }
     }
@@ -388,15 +388,15 @@ public class Matter {
     // Calculates the moment of inertia of the object and adds it to the mass
     //  equivalents field.
     public void calcMomIn(){
-        Vector CM = centersOfMassEquivalents.getOrDefault("Mass", new Vector()); // Center of mass
+        Vector CM = centersOfMassEquivalents.getOrDefault("Mass", new Vector(3)); // Center of mass
         double moment = 0.0; // What will be saved as moment of inertia
         double mass = 0.0; // Temporary variable for the mass of the particle
         Vector rad = new Vector(3); // Vector from CM to particle
         
         // Looping through all particles in the matter object.
-        for (int i = 0; i<particles.size(); i++){
-            mass = (double) particles.get(i).getMassEquivalentValues().getOrDefault("Mass", 0.0);
-            rad = Vector.subtract(particles.get(i).getPosition(), CM);
+        for (Particle p : particles){
+            mass = (double) p.getMassEquivalentValues().getOrDefault("Mass", 0.0);
+            rad = Vector.subtract(p.getPosition(), CM);
             moment += mass*rad.getMag()*rad.getMag();
         }
         
@@ -415,9 +415,9 @@ public class Matter {
     public Vector calculateCenter(String massEq){
         double total = 0.0;
         Vector mR = new Vector(new double[]{0.0, 0.0, 0.0});
-        for (int i = 0; i< particles.size(); i++){
-            mR = Vector.add(mR, Vector.multiply(particles.get(i).getPosition(), (double) particles.get(i).getMassEquivalentValues().get(massEq)));
-            total += Math.abs((double) particles.get(i).getMassEquivalentValues().get(massEq));
+        for (Particle p : particles){
+            mR = Vector.add(mR, Vector.multiply(p.getPosition(), (double) p.getMassEquivalentValues().get(massEq)));
+            total += Math.abs((double) p.getMassEquivalentValues().get(massEq));
         }
         return Vector.multiply(mR, 1.0/total);
     }
@@ -425,8 +425,8 @@ public class Matter {
     // Calculates the mass equivalent value for a given mass equivalent.
     public double calculateME(String massEq){
         double total = 0.0;
-        for (int i = 0; i<particles.size(); i++){
-            total += (double) particles.get(i).getMassEquivalentValues().getOrDefault(massEq, 0.0);
+        for (Particle p : particles){
+            total += (double) p.getMassEquivalentValues().getOrDefault(massEq, 0.0);
         }
         return total;
     }

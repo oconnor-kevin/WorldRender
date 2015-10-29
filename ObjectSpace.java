@@ -32,6 +32,7 @@
 import linearalgebra.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.io.PrintWriter;
 
 public class ObjectSpace {
 
@@ -49,7 +50,7 @@ public class ObjectSpace {
     
     // A list of the active forces in the object space.
     private ArrayList<Force> activeForces;
-
+        
 //------------------------------------------------------------------------------    
 // Constructors
     public ObjectSpace(){

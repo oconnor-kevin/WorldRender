@@ -44,8 +44,8 @@ public class Particle {
     // Creates a particle with 3-dimensional zero vectors for its position and 
     //  velocity and an empty hashmap for its massEquivalentValues.  
     public Particle(){
-        position = new Vector(new double[]{0.0,0.0,0.0});
-        velocity = new Vector(new double[]{0.0,0.0,0.0});
+        position = new Vector(3);
+        velocity = new Vector(3);
         massEquivalentValues = new HashMap();
     }
     
@@ -56,12 +56,13 @@ public class Particle {
         if (pos.getComp().length == 3 && vel.getComp().length == 3){
             position = pos;
             velocity = vel;
-            massEquivalentValues = new HashMap();
         }
         else {
             System.out.println("At least one vector argument in Particle constructor is not 3-dimensional.");
-            new Particle();
+            position = new Vector(3);
+            velocity = new Vector(3);
         }
+        massEquivalentValues = new HashMap();
     }
     
     // Creates a particle with pos set as its position field, vel set as its
@@ -70,12 +71,13 @@ public class Particle {
         if (pos.getComp().length == 3 && vel.getComp().length == 3){
             position = pos;
             velocity = vel;
-            massEquivalentValues = massEq;
         }
         else {
             System.out.println("At least one vector argument in Particle constructor is not 3-dimensional.");
-            new Particle();
+            position = new Vector(3);
+            velocity = new Vector(3);
         }
+        massEquivalentValues = massEq;
     }
 
 //------------------------------------------------------------------------------
@@ -147,8 +149,7 @@ public class Particle {
         
         // Creating Position-Velocity vector which will be rotated to find the 
         //  new velocity.
-        Vector posVel = new Vector();
-        posVel = Vector.add(position, velocity);
+        Vector posVel = Vector.add(position, velocity);
         
         // Rotating the position+velocity vector.
         posVel.rotateAroundAxis(axis, ang);
@@ -185,7 +186,6 @@ public class Particle {
     public String printParticle(){
         return printParticle(this);
     }
-
     
 //==============================================================================
 // TESTING

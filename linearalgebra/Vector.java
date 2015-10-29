@@ -507,7 +507,7 @@ public class Vector {
     /* TODO:public static ArrayList<Vector> eigenVectors(Vector v)
         */
         
-		
+   
 //==============================================================================
 //  TESTING
         
